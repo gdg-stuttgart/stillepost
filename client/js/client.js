@@ -53,7 +53,7 @@ socket.on('message', function(data){
 	if(data.length != 15){
 	  var obj = JSON.parse(data);
 	  if (obj.type == "draw") {
-		  drawLine(obj.arguments[0], obj.arguments[1]);
+		  drawLine(obj.arguments.line);
 	  } else {
 		  message(obj);
 	  }
