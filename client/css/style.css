@@ -1,0 +1,32 @@
+h1 {
+	text-align: center;
+}
+section.left, section.left-big {
+	width:	50%;
+	float:	left;
+}
+section.right, section.right-small {
+	width:	50%;
+	float:	right;
+}
+section.right-small {
+	width:	25%;
+}
+section.left-big {
+	width:	75%;
+}
+section.buttom {
+	clear:	both;
+}
+footer {
+	clear:	both;
+}
+label.small {
+	display:	inline-block;
+	width:	80px;
+}
+canvas {
+	border:	1px solid black;
+	height:	400px;
+	width:	600px;
+}
