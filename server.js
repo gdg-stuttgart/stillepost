@@ -16,7 +16,7 @@ server = http.createServer(function(req, res){
 	switch (path){
 		case '/':
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.write('<h1>Welcome. Try the <a href="/client/index.html">client</a> example.</h1>');
+			res.write('<h1>Welcome. Try the <a href="/client/index.html">stillepost</a> example.</h1>');
 			res.end();
 			break;
 			
@@ -66,7 +66,7 @@ var //buffer = [],
 		
 io.on('connection', function(client){
 	client.send(JSON.stringify(games));
-	client.broadcast(json({ announcement: client.sessionId + ' connected' }));
+	client.broadcast(JSON.stringify({ announcement: client.sessionId + ' connected' }));
 
 	client.on('message', function(message){
 		var msg = JSON.parse(message)

@@ -10,13 +10,13 @@ function message(obj){
   var el = document.createElement('p');
   if ('announcement' in obj) el.innerHTML = '<em>' + esc(obj.announcement) + '</em>';
   else if ('message' in obj) el.innerHTML = '<b>' + esc(obj.message[0]) + ':</b> ' + esc(obj.message[1]);
-  document.getElementById('chat').appendChild(el);
-  document.getElementById('chat').scrollTop = 1000000;
+  //document.getElementById('chat').appendChild(el);
+  //document.getElementById('chat').scrollTop = 1000000;
 }
 
 // open socket
 var socket = new io.Socket(null, {port: 8080});
-socket.connect();
+var con = socket.connect();
 // call message function when receiving new data through socket
 socket.on('message', function(data){
   var obj = JSON.parse(data);
@@ -35,7 +35,8 @@ function create_game(){
 	var player = document.getElementById('player').value;
 	var json = "{ \"type\": \"create_game\", \"arguments\": { \"game\": \""+game+"\", \"player\": \""+player+"\" } }";
 	alert(json);
-	socket.send(json);
+	var rsp = socket.send(json);
+	alert(rsp);
 }
 
 /**
