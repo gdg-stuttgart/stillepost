@@ -15,7 +15,7 @@ function esc(msg){
 function message(obj){
   console.log(obj);
   games = obj;
-  //var el = document.createElement('p'); //del from mp
+  //var el = document.createElement('p');
   //if ('announcement' in obj) el.innerHTML = '<em>' + esc(obj.announcement) + '</em>';
   //else if ('message' in obj) el.innerHTML = '<b>' + esc(obj.message[0]) + ':</b> ' + esc(obj.message[1]);
   //document.getElementById('chat').appendChild(el);
@@ -23,22 +23,27 @@ function message(obj){
   if('message' in obj) {
 	  alert(obj.message[0]);
 	  // add new player to player list
-	  var li = document.createElement('li');
-	  li.innerHTML = esc(obj.message[0]);
-	  document.getElementById('init_list_players').appendChild(li);
+	  //var li = document.createElement('li');
+	  //li.innerHTML = esc(obj.message[0]);
+	  //document.getElementById('init_list_players').appendChild(li);
+	  $('#init_list_players').append($('<li></li>')).text(obj.message[0]);
   }
   //add all games to select list
-  if(obj['type']=='games_list') {
-	  for(key in obj['arguments']){
+  if(obj.type == 'games_list') {
+	  for(key in obj.arguments){
 		  console.log('add game:' + key);
-		  var option = document.createElement('option');
-		  option.value=key;
-		  option.text=key;
-		  console.log(option);
-		  document.getElementById('join_list_games').appendChild(option);
+		  //var option = document.createElement('option');
+		  //option.value=key;
+		  //option.text=key;
+		  //console.log(option);
+		  $('#join_list_games').append($('<option></option>').val(key).html(key));
+		  //document.getElementById('join_list_games').appendChild(option);
 	  }
-	  if(document.getElementById('join_list_games').childNodes.length>0){
-	  	document.getElementById('join_list_games').childNodes[0].selected=true;
+	  //if(document.getElementById('join_list_games').childNodes.length>0){
+	  //	document.getElementById('join_list_games').childNodes[0].selected=true;
+  	  //}
+  	  if ($('#join_list_games').length > 0) {
+  	  	$("#join_list_games option:first").attr('selected','selected');
   	  }
   }
 }
