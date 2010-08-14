@@ -37,7 +37,9 @@ function message(obj){
 		  console.log(option);
 		  document.getElementById('join_list_games').appendChild(option);
 	  }
-	  document.getElementById('join_list_games').childNodes[3].selected=true;
+	  if(document.getElementById('join_list_games').childNodes.length>0){
+	  	document.getElementById('join_list_games').childNodes[0].selected=true;
+  	  }
   }
 }
 
@@ -102,6 +104,7 @@ function create_game(){
 	var game = document.getElementById('init_new_game').value;
 	var player = document.getElementById('init_player').value;
 	var json = "{ \"type\": \"create_game\", \"arguments\": { \"game\": \""+game+"\", \"player\": \""+player+"\" } }";
+	console.log(json);
 	socket.send(json); // asynchronous call
 	document.getElementById('init_new_game').disabled=true;
 	document.getElementById('init_player').disabled=true;
