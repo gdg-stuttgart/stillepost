@@ -31,13 +31,20 @@ var con = socket.connect();
 // call message function when receiving new data through socket
 socket.on('message', function(data){
   var obj = JSON.parse(data);
-  alert(data);
-  if ('buffer' in obj){
-  	// @todo: disable form 
-	  alert('got message 2');
-    for (var i in obj.buffer) message(obj.buffer[i]);
-  } else message(obj);
-});  
+  if (obj.type == "draw") {
+	  
+	  drawLine(obj.arguments[0], obj.arguments[1]);
+  }
+}); 
+
+function drawLine(from, to) {
+	context = document.getElementById('canvas').getContext("2d");
+	context.beginPath();
+    context.moveTo(from[0], from[1]);
+    context.lineTo(to[0], to[1]);
+    context.closePath();
+    context.stroke();
+}
 
 /**
  * init a game

@@ -73,13 +73,16 @@ io.on('connection', function(client){
 
 	client.on('message', function(message) {
 		var msg = JSON.parse(message)
-		if (msg.type == "create_game") {
+		if (msg.type == "draw") {
+			client.broadcast(message);
+		}
+		else if (msg.type == "create_game") {
 			create_game(msg.arguments);
+			client.broadcast(JSON.stringify(games));
 		} else if (msg.type == "join_game") {
 			games[msg.arguments.name].players[msg.arguments.player] = 0;
+			client.broadcast(JSON.stringify(games));
 		}
-		console.log(JSON.stringify(games));
-		client.broadcast(JSON.stringify(games));
 	});
 
 	client.on('disconnect', function(){
