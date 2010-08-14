@@ -75,7 +75,7 @@ var games = new Object(),
 		io = io.listen(server);
 		
 io.on('connection', function(client){
-	client.send(JSON.stringify(games));
+	client.send(client.broadcast(serialize("games_list", games)));
 	client.broadcast(JSON.stringify({ announcement: client.sessionId + ' connected' }));
 
 	client.on('message', function(message) {
@@ -101,7 +101,7 @@ io.on('connection', function(client){
 			rank: 0;
 			picture: [];
 		};
-		client.broadcast(serialize("list_games", games));
+		client.broadcast(serialize("game", games[data.game]));
 	}
 
 	function join_game(data) {
@@ -110,12 +110,12 @@ io.on('connection', function(client){
 			picture: [];
 		};
 		games[data.game].players[data.player].rank = games[data.name].players.size();
-		client.broadcast(serialize("list_games", games));
+		client.broadcast(serialize("game", games[data.game]));
 	}
 
 	function draw_line(data) {
 		games[data.game].players[data.player].picture.push(msg.arguments.line);
-		client.broadcast("draw", data);
+		client.broadcast(serialize("line", msg.arguments.line));
 	}
 });
 
