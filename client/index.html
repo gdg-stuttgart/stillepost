@@ -26,23 +26,18 @@
   </article>
   <article class="hide" id="join">
     <section>
-        <form onsubmit="join_game(); return false">
         <section class="left">
-        <select size="15" id="join_list_games">	<!--Liste aller Spiele-->
-                <option>game 1</option>
-                <option>game 2</option>
+        <select size="15" id="join_list_games" onchange="join_display_players(this)">	<!--Liste aller Spiele-->
         </select>
         </section>
         <section class="rigth">
         <ul id="join_list_players">			<!--Liste der Spieler im Spiel-->
-                <li>gamer 1</li>
         </ul>
         </section>
         <section class="buttom">
         <label for="join_player" class="small">your name:</label> <input type="text" id="join_player" name="join_player" />
-        <input type="submit" value="join game" name="submit">
+        <input type="button" value="join game" name="submit" onclick="join_game(); return false">
         </section>
-        </form>
     </section>
   </article>
   <article class="hide" id="init">
