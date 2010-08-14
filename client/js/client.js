@@ -15,7 +15,7 @@ function esc(msg){
 function message(obj){
   console.log(obj);
   games = obj;
-  var el = document.createElement('p');
+  //var el = document.createElement('p'); //del from mp
   //if ('announcement' in obj) el.innerHTML = '<em>' + esc(obj.announcement) + '</em>';
   //else if ('message' in obj) el.innerHTML = '<b>' + esc(obj.message[0]) + ':</b> ' + esc(obj.message[1]);
   //document.getElementById('chat').appendChild(el);
