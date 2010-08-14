@@ -115,7 +115,7 @@ io.on('connection', function(client){
 
 	function draw_line(data) {
 		games[data.game].players[data.player].picture.push(msg.arguments.line);
-		client.broadcast(serialize("line", msg.arguments.line));
+		client.broadcast(serialize("line", msg.arguments));
 	}
 });
 
