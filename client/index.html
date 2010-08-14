@@ -9,7 +9,7 @@
     <title>stillepost</title>
   </head>
   <body>
-  	<header><h1>stillepost</h1></header>
+  	<header><h1>Stillepost</h1></header>
   <article id="options_game" class="color">
     <section>
       <p>Description</p>
@@ -46,7 +46,7 @@
         <legend>register</legend>
         <label for="init_new_game" class="small">game name:</label> <input type="text" name="init_new_game" id="init_new_game" /><br />
         <label for="init_player" class="small">your name:</label> <input type="text" name="init_player" id="init_player" /><br />
-        <input type="button" name="submit" value="register" id="init_register" onclick="create_game(); return false" />
+        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();switch_play_game();return false" />
         </fieldset>
     </section>
     <section class="right">
@@ -62,6 +62,7 @@
   </article>
   <article class="hide" id="game">
         <section class="left-big">
+        	<p>Game: <span id="lblGame"></span>, player: <span id="lblPlayer"></span></p>
                 <canvas id="canvas">
                 </canvas>
         </section>

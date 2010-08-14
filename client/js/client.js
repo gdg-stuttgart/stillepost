@@ -46,15 +46,24 @@ function message(obj){
 var socket = new io.Socket(null, {port: 8080});
 var con = socket.connect();
 var game = new Object();
+
+function setGame(gameName, player) {
+	game.player = player;
+	game.name = gameName;
+	var playerNode = document.createTextNode(player);
+	document.getElementById('lblPlayer').appendChild(playerNode);
+	var gameNode = document.createTextNode(game.name);
+	document.getElementById('lblGame').appendChild(gameNode);
+}
+
 // call message function when receiving new data through socket
 socket.on('message', function(data){
 	if(data.length == 15) {
 		// check if data is not empty (string with 15 chars means no valid JSON string)
 		return;
 	}
-	console.log("Received serialized data: " + data);
 	var obj = JSON.parse(data);
-	console.log("Received "+obj.type+"-event " + " from " + obj.arguments.player);
+	console.log("Received "+obj.type+"-event from " + obj.arguments.player);
 	message(obj);
 }); 
 
@@ -65,7 +74,6 @@ socket.on('message', function(data){
 function switch_init_game(){
 	document.getElementById('options_game').className='hide';
 	document.getElementById('init').className='';
-	
 }
 
 /**
@@ -79,6 +87,7 @@ function switch_join_game(){
 
 function switch_play_game() {
 	document.getElementById('join').className='hide';
+	document.getElementById('init').className='hide';
 	document.getElementById('game').className='';	
 }
 
@@ -103,14 +112,16 @@ function join_display_players(selectElement){
  * send "create game" form data via web socket to server
  */
 function create_game(){
-	game.name = document.getElementById('init_new_game').value;
-	game.player = document.getElementById('init_player').value;
+	var name = document.getElementById('init_new_game').value;
+	var player = document.getElementById('init_player').value;
+	setGame(name, player);
 	send("create_game");
 	document.getElementById('init_new_game').disabled=true;
 	document.getElementById('init_player').disabled=true;
 	document.getElementById('init_register').disabled=true;
 	var li = document.createElement('li');
-	li.innerHTML = game.player;
+	// TODO: is this still needed?
+	li.innerHTML = player;
 	document.getElementById('init_list_players').removeChild(document.getElementById('init_list_players').childNodes[1]);
 	document.getElementById('init_list_players').appendChild(li);
 }
@@ -119,8 +130,9 @@ function create_game(){
  * send "join game" form data via web socket server
  */
 function join_game(){
-	game.name = document.getElementById('join_list_games').value;
-	game.player = document.getElementById('join_player').value;
+	var name = document.getElementById('join_list_games').value;
+	var player = document.getElementById('join_player').value;
+	setGame(name, player);
 	send("join_game");
 };
 
