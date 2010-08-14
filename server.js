@@ -60,21 +60,21 @@ server.listen(8080);
 		
 // socket.io, I choose you
 // simplest chat application evar
-var //buffer = [], 
-	games = new Object(),
+var games = new Object(),
 		io = io.listen(server);
 		
 io.on('connection', function(client){
 	client.send(JSON.stringify(games));
 	client.broadcast(JSON.stringify({ announcement: client.sessionId + ' connected' }));
 
-	client.on('message', function(message){
+	client.on('message', function(message) {
 		var msg = JSON.parse(message)
-		if (msg.type == "create_game ") {
-			create_game(msg.type);
+		if (msg.type == "create_game") {
+			create_game(msg.arguments);
 		} else if (msg.type == "join_game") {
-			games[data.name].players[msg.type.player] = 0;
+			games[msg.arguments.name].players[msg.arguments.player] = 0;
 		}
+		console.log(JSON.stringify(games));
 		client.broadcast(JSON.stringify(games));
 	});
 
@@ -84,6 +84,7 @@ io.on('connection', function(client){
 });
 
 function create_game(data) {
-	games[data.name].players = new Object();
-	games[data.name].players[data.player] = 0;
+	games[data.game] = new Object();
+	games[data.game].players = new Object();
+	games[data.game].players[data.player] = 0;
 }
