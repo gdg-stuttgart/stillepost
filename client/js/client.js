@@ -32,16 +32,16 @@ socket.on('message', function(data){
 /**
  * init a game
  */
-function init_game(){
-	document.getElementById('options').className='hide';
+function switch_init_game(){
+	document.getElementById('options_game').className='hide';
 	document.getElementById('init').className='';
 }
 
 /**
  * join a game
  */
-function join_game(){
-	document.getElementById('options').className='hide';
+function switch_join_game(){
+	document.getElementById('options_game').className='hide';
 	document.getElementById('join').className='';
 }
 
