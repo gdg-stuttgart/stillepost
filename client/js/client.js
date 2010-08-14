@@ -28,18 +28,16 @@ function message(obj){
 	  document.getElementById('init_list_players').appendChild(li);
   }
   //add all games to select list
-  for(key in obj){
-	  if('players' in obj[key]) {
-		  for(key in games){
-			  console.log('add game:' + key);
-			  var option = document.createElement('option');
-			  option.value=key;
-			  option.text=key;
-			  console.log(option);
-			  document.getElementById('join_list_games').appendChild(option);
-		  }
-		  document.getElementById('join_list_games').childNodes[3].selected=true;
+  if(obj['type']=='games_list') {
+	  for(key in obj['arguments']){
+		  console.log('add game:' + key);
+		  var option = document.createElement('option');
+		  option.value=key;
+		  option.text=key;
+		  console.log(option);
+		  document.getElementById('join_list_games').appendChild(option);
 	  }
+	  document.getElementById('join_list_games').childNodes[3].selected=true;
   }
 }
 
@@ -48,10 +46,16 @@ var socket = new io.Socket(null, {port: 8080});
 var con = socket.connect();
 // call message function when receiving new data through socket
 socket.on('message', function(data){
-  var obj = JSON.parse(data);
-  if (obj.type == "draw") {
-	  drawLine(obj.arguments[0], obj.arguments[1]);
-  } else message(obj);
+	// check if data is not empty (string with 15 chars means no valid JSON string)
+	console.log(data);
+	if(data.length != 15){
+	  var obj = JSON.parse(data);
+	  if (obj.type == "draw") {
+		  drawLine(obj.arguments[0], obj.arguments[1]);
+	  } else {
+		  message(obj);
+	  }
+	}
 }); 
 
 function drawLine(from, to) {
