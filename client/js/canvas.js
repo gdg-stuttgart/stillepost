@@ -25,8 +25,10 @@ var canvasOnMouseMove = function(e) {
 		return;
 	}
 	current = convertToCanvasCoordinates(e.pageX, e.pageY);
-	drawLine([lastMousePosition, current]);
+	line = [lastMousePosition, current];
 	lastMousePosition = current;
+	drawLine(line);
+	send("draw", line);
 };
 
 var canvasOnMouseUp = function(e) {
@@ -42,15 +44,10 @@ if ('attachEvent' in window) {
 function drawLine(line) {
 	context = document.getElementById('canvas').getContext("2d");
 	context.beginPath();
-	context.moveTo(line[0][0], line[0][1]);
-	context.lineTo(line[1][0], line[1][1]);
+	from = line[0];
+	to = line[1];
+	context.moveTo(from[0], from[1]);
+	context.lineTo(to[0], to[1]);
 	context.stroke();
 	context.closePath();
-	var data = new Object();
-	data.type = "draw"
-	data.arguments = new Object();
-	data.game = game;
-	data.player = player;
-	data.line = line;
-	socket.send(JSON.stringify(data));
 }
