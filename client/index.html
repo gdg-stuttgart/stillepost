@@ -13,11 +13,11 @@
       <p>Description</p>
     </section>
     <section>
-    	<form action="">
+    	<form>
     	<fieldset>
     	<legend>options</legend>
-    	<input type="submit" name="option" value="init game" onclick="switch_init_game(); return false" />
-    	<input type="submit" name="option" value="join game" onclick="switch_join_game(); return false" />
+    	<input type="button" name="option" value="init game" onclick="switch_init_game(); return false" />
+    	<input type="button" name="option" value="join game" onclick="switch_join_game(); return false" />
     	</fieldset>
     	</form>
     </section>
@@ -45,14 +45,12 @@
   </article>
   <article class="hide" id="init">
     <section class="left">
-        <form onsubmit="create_game(); return false">
         <fieldset>
         <legend>register</legend>
         <label for="init_new_game" class="small">game name:</label> <input type="text" name="init_new_game" id="init_new_game" /><br />
         <label for="init_player" class="small">your name:</label> <input type="text" name="init_player" id="init_player" /><br />
-        <input type="submit" name="submit" value="register" />
+        <input type="button" name="submit" value="register" id="init_register" onclick="create_game(); return false" />
         </fieldset>
-        </form>
     </section>
     <section class="right">
         <form action="">
