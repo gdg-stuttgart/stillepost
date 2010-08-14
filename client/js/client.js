@@ -1,19 +1,6 @@
 // setup socket
 io.setPath('/js/');
 
-/**
- * parse incoming messages
- * 
- * @param obj
- */
-function message(obj){
-  alert('got message');
-  var el = document.createElement('p');
-  if ('announcement' in obj) el.innerHTML = '<em>' + esc(obj.announcement) + '</em>';
-  else if ('message' in obj) el.innerHTML = '<b>' + esc(obj.message[0]) + ':</b> ' + esc(obj.message[1]);
-  //document.getElementById('chat').appendChild(el);
-  //document.getElementById('chat').scrollTop = 1000000;
-}
 
 // open socket
 var socket = new io.Socket(null, {port: 8080});
@@ -21,13 +8,20 @@ var con = socket.connect();
 // call message function when receiving new data through socket
 socket.on('message', function(data){
   var obj = JSON.parse(data);
-  alert(data);
-  if ('buffer' in obj){
-  	// @todo: disable form 
-	  alert('got message 2');
-    for (var i in obj.buffer) message(obj.buffer[i]);
-  } else message(obj);
-});  
+  if (obj.type == "draw") {
+	  
+	  drawLine(obj.arguments[0], obj.arguments[1]);
+  }
+}); 
+
+function drawLine(from, to) {
+	context = document.getElementById('canvas').getContext("2d");
+	context.beginPath();
+    context.moveTo(from[0], from[1]);
+    context.lineTo(to[0], to[1]);
+    context.closePath();
+    context.stroke();
+}
 
 /**
  * init a game
