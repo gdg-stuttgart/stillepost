@@ -60,6 +60,13 @@ server = http.createServer(function(req, res){
 	}
 });
 
+Object.prototype.size = function () {
+  var len = this.length ? --this.length : -1;
+    for (var k in this)
+      len++;
+  return len;
+}
+
 server.listen(8080);
 		
 // socket.io, I choose you
@@ -73,25 +80,48 @@ io.on('connection', function(client){
 
 	client.on('message', function(message) {
 		var msg = JSON.parse(message)
+		//TODO: Use reflections
 		if (msg.type == "draw") {
-			client.broadcast(message);
-		}
-		else if (msg.type == "create_game") {
+			draw_line(msg.arguments)
+		} else if (msg.type == "create_game") {
 			create_game(msg.arguments);
-			client.broadcast(JSON.stringify(games));
 		} else if (msg.type == "join_game") {
-			games[msg.arguments.name].players[msg.arguments.player] = 0;
-			client.broadcast(JSON.stringify(games));
+			join_game(msg.arguments);
 		}
 	});
 
 	client.on('disconnect', function(){
 		client.broadcast(JSON.stringify({ announcement: client.sessionId + ' disconnected' }));
 	});
+	
+	function create_game(data) {
+		games[data.game] = new Object();
+		games[data.game].players = new Object();
+		games[data.game].players[data.player] = function() {
+			rank: 0;
+			picture: [];
+		};
+		client.broadcast(serialize("list_games", games));
+	}
+
+	function join_game(data) {
+		games[data.game].players[data.player] = function() {
+			rank: 0;
+			picture: [];
+		};
+		games[data.game].players[data.player].rank = games[data.name].players.size();
+		client.broadcast(serialize("list_games", games));
+	}
+
+	function draw_line(data) {
+		games[data.game].players[data.player].picture.push(msg.arguments.line);
+		client.broadcast("draw", data);
+	}
 });
 
-function create_game(data) {
-	games[data.game] = new Object();
-	games[data.game].players = new Object();
-	games[data.game].players[data.player] = 0;
+function serialize(key, value) {
+	var data = new Object();
+	data.type = key;
+	data.arguments = value;
+	return JSON.stringify(data);
 }
