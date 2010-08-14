@@ -25,7 +25,7 @@ var canvasOnMouseMove = function(e) {
 		return;
 	}
 	current = convertToCanvasCoordinates(e.pageX, e.pageY);
-	drawLine(lastMousePosition, current);
+	drawLine([lastMousePosition, current]);
 	lastMousePosition = current;
 };
 
@@ -39,13 +39,18 @@ if ('attachEvent' in window) {
 	window.addEventListener('load', canvasRegistrationFn, false);
 }
 
-function drawLine(from, to) {
+function drawLine(line) {
 	context = document.getElementById('canvas').getContext("2d");
 	context.beginPath();
-	context.moveTo(from[0], from[1]);
-	context.lineTo(to[0], to[1]);
+	context.moveTo(line[0][0], line[0][1]);
+	context.lineTo(line[1][0], line[1][1]);
 	context.stroke();
 	context.closePath();
-	jsonArgs = JSON.stringify([from, to]);
-	socket.send('{"type": "draw", "arguments": '+jsonArgs+'}');
+	var data = new Object();
+	data.type = "draw"
+	data.arguments = new Object();
+	data.game = game;
+	data.player = player;
+	data.line = line;
+	socket.send(JSON.stringify(data));
 }

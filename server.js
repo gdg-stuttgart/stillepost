@@ -105,12 +105,14 @@ io.on('connection', function(client){
 	}
 
 	function join_game(data) {
-		games[data.game].players[data.player] = function() {
-			rank: 0;
-			picture: [];
-		};
-		games[data.game].players[data.player].rank = games[data.name].players.size();
-		client.broadcast(serialize("game", games[data.game]));
+		if (data.game != "") {
+			games[data.game].players[data.player] = function() {
+				rank: 0;
+				picture: [];
+			};
+			games[data.game].players[data.player].rank = games[data.name].players.size();
+			client.broadcast(serialize("game", games[data.game]));
+		}
 	}
 
 	function draw_line(data) {
