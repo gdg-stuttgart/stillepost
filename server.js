@@ -38,6 +38,10 @@ server = http.createServer(function(req, res){
 			if (/\.(png)$/.test(path)){
 				contentType = 'image/png';
 				encoding = 'binary';
+			} else
+			if (/\.(css)$/.test(path)){
+				contentType = 'text/css';
+				encoding = 'utf8';
 			}
 			if(contentType != null && encoding != null) {
 				try {

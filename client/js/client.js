@@ -7,6 +7,7 @@ io.setPath('/js/');
  * @param obj
  */
 function message(obj){
+  alert('got message');
   var el = document.createElement('p');
   if ('announcement' in obj) el.innerHTML = '<em>' + esc(obj.announcement) + '</em>';
   else if ('message' in obj) el.innerHTML = '<b>' + esc(obj.message[0]) + ':</b> ' + esc(obj.message[1]);
@@ -20,12 +21,29 @@ var con = socket.connect();
 // call message function when receiving new data through socket
 socket.on('message', function(data){
   var obj = JSON.parse(data);
-
+  alert(data);
   if ('buffer' in obj){
-  	// @todo: disable form    
+  	// @todo: disable form 
+	  alert('got message 2');
     for (var i in obj.buffer) message(obj.buffer[i]);
   } else message(obj);
 });  
+
+/**
+ * init a game
+ */
+function init_game(){
+	document.getElementById('options').className='hide';
+	document.getElementById('init').className='';
+}
+
+/**
+ * join a game
+ */
+function join_game(){
+	document.getElementById('options').className='hide';
+	document.getElementById('join').className='';
+}
 
 /**
  * send "create game" form data via web socket to server
@@ -34,9 +52,7 @@ function create_game(){
 	var game = document.getElementById('game').value;
 	var player = document.getElementById('player').value;
 	var json = "{ \"type\": \"create_game\", \"arguments\": { \"game\": \""+game+"\", \"player\": \""+player+"\" } }";
-	alert(json);
-	var rsp = socket.send(json);
-	alert(rsp);
+	socket.send(json); // asynchronous call
 }
 
 /**
