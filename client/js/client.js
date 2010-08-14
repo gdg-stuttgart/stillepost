@@ -1,3 +1,14 @@
+var socket = new io.Socket(null, {port: 8080});
+      socket.connect();
+      socket.on('message', function(data){
+        var obj = JSON.parse(data);
+
+        if ('buffer' in obj){
+        	// @todo: disable form
+        	for (var i in obj.buffer) message(obj.buffer[i]);
+        } else message(obj);
+      });    
+
 function create_game(){
 	var game = document.getElementById('game').value;
 	var player = document.getElementById('player').value;
