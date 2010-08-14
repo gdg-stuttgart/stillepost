@@ -1,6 +1,29 @@
 // setup socket
 io.setPath('/js/');
 
+function esc(msg){
+    return msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  };
+
+/**
+ * parse incoming messages
+ * 
+ * @param obj
+ */
+function message(obj){
+  alert('got message');
+  var el = document.createElement('p');
+  //if ('announcement' in obj) el.innerHTML = '<em>' + esc(obj.announcement) + '</em>';
+  //else if ('message' in obj) el.innerHTML = '<b>' + esc(obj.message[0]) + ':</b> ' + esc(obj.message[1]);
+  //document.getElementById('chat').appendChild(el);
+  //document.getElementById('chat').scrollTop = 1000000;
+  if('message' in obj) {
+	  alert(obj.message[0]);
+	  var li = document.createElement('li');
+	  li.innerHTML = esc(obj.message[0]);
+	  document.getElementById('init_list_players').appendChild(li);
+  }
+}
 
 // open socket
 var socket = new io.Socket(null, {port: 8080});
@@ -21,6 +44,7 @@ socket.on('message', function(data){
 function switch_init_game(){
 	document.getElementById('options_game').className='hide';
 	document.getElementById('init').className='';
+	
 }
 
 /**
@@ -35,10 +59,18 @@ function switch_join_game(){
  * send "create game" form data via web socket to server
  */
 function create_game(){
-	var game = document.getElementById('game').value;
-	var player = document.getElementById('player').value;
+	alert('create game');
+	var game = document.getElementById('init_new_game').value;
+	var player = document.getElementById('init_player').value;
 	var json = "{ \"type\": \"create_game\", \"arguments\": { \"game\": \""+game+"\", \"player\": \""+player+"\" } }";
 	socket.send(json); // asynchronous call
+	document.getElementById('init_new_game').disabled=true;
+	document.getElementById('init_player').disabled=true;
+	document.getElementById('init_register').disabled=true;
+	var li = document.createElement('li');
+	li.innerHTML = player;
+	document.getElementById('init_list_players').removeChild(document.getElementById('init_list_players').childNodes[1]);
+	document.getElementById('init_list_players').appendChild(li);
 }
 
 /**
