@@ -14,14 +14,6 @@ socket.on('message', function(data){
   }
 }); 
 
-function drawLine(from, to) {
-	context = document.getElementById('canvas').getContext("2d");
-	context.beginPath();
-    context.moveTo(from[0], from[1]);
-    context.lineTo(to[0], to[1]);
-    context.closePath();
-    context.stroke();
-}
 
 /**
  * init a game
