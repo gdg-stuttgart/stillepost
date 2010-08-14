@@ -1,35 +1,55 @@
 h1 {
-	text-align: center;
+	font-weight:		bold;
+	border-bottom:		double red;
+	text-align:		center;
 }
 section.left, section.left-big {
-	width:	50%;
-	float:	left;
+	width:		50%;
+	float:		left;
 }
 section.right, section.right-small {
-	width:	50%;
-	float:	right;
+	width:		50%;
+	float:		right;
 }
 section.right-small {
-	width:	25%;
+	width:		25%;
 }
 section.left-big {
-	width:	75%;
+	width:		75%;
 }
 section.buttom {
-	clear:	both;
+	clear:		both;
 }
 footer {
-	clear:	both;
+	clear:		both;
 }
 label.small {
 	display:	inline-block;
-	width:	80px;
+	width:		80px;
 }
 canvas {
-	border:	1px solid black;
-	height:	400px;
-	width:	600px;
+	border:		5px radge #003000;
+	height:		400px;
+	width:		600px;
 }
 .hide {
 	display:	none;
+}
+fieldset {
+	background-color:	red;
+	border: 	5px ridge #003000;
+	border-radius: 	10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius:	10px;
+	text-align:	center;
+	legend-align:	center;
+}
+legend {
+	color:		#ffffff;
+	background-color:	#000030;
+	border:		5px ridge #003000;
+	font-size:	120%;
+	text-align:	center;
+	text-decoration:	blink;
+	left:		50%;
 }
