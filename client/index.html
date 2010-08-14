@@ -8,7 +8,7 @@
   </head>
   <body>
   	<header><h1>stillepost</h1></header>
-  <article>
+  <article id="options_game">
     <section>
       <p>Description</p>
     </section>
@@ -22,7 +22,7 @@
     	</form>
     </section>
   </article>
-  <article class="hide">
+  <article class="hide" id="join">
     <section>
         <form onsubmit="join_game(); return false">
         <section class="left">
@@ -43,7 +43,7 @@
         </form>
     </section>
   </article>
-  <article class="hide">
+  <article class="hide" id="init">
     <section class="left">
         <form onsubmit="create_game(); return false">
         <fieldset>
@@ -65,7 +65,7 @@
         </fieldset>
         </form>
   </article>
-  <article class="hide">
+  <article class="hide" id="game">
         <section class="left-big">
                 <canvas />
         </section>
