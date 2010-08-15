@@ -177,6 +177,9 @@ function join_game(){
 	}
 	// add yourself to player list
 	$('#game_list_players').append('<li>'+player+'</li>');
+	// add yourself to player object
+	games.arguments[game.name].players[player] = new Object();
+	games.arguments[game.name].players[player].picture = new Array();
 };
 
 /**
