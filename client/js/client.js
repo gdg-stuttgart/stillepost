@@ -73,6 +73,10 @@ function message(obj){
   } else if (obj.type == "done_players") {
 	  clear_canvas();
 	  games[game.name].done_players = obj.arguments;
+	  if (is_current_player()) {
+	  	//TODO
+	  	setTimeout('clear_canvas()', 1500);
+	  }
   }
 }
 
@@ -204,6 +208,10 @@ function pass_on(){
 	clear_canvas();
 	//switch_play_game();
 };
+
+function is_current_player() {
+	return false;
+}
 
 function send(type, line) {
 	var json = new Object();
