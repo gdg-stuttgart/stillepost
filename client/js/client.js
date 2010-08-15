@@ -70,6 +70,9 @@ function message(obj){
 	  alert('game started');
   } else if (obj.type == "draw") {
 	  drawLine(obj.arguments.line);
+  } else if (obj.type == "done_players") {
+	  clear_canvas();
+	  games[game.name].done_players = obj.arguments;
   }
 }
 
@@ -198,6 +201,7 @@ function start_game(){
  */
 function pass_on(){
 	send('pass_on');
+	clear_canvas();
 	//switch_play_game();
 };
 

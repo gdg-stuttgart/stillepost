@@ -51,3 +51,7 @@ function drawLine(line) {
 	context.stroke();
 	context.closePath();
 }
+
+function clear_canvas() {
+	context.clearRect(0, 0, canvas.width, canvas.height);
+}
