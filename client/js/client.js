@@ -99,8 +99,8 @@ socket.on('message', function(data){
  * init a game
  */
 function switch_init_game(){
-	$('#options_game').className='hide';
-	$('#init').className='';
+	$('#options_game')[0].className='hide';
+	$('#init')[0].className='';
 }
 
 /**
