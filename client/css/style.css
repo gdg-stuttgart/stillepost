@@ -34,7 +34,7 @@ canvas {
 	height:		400px;
 	width:		600px;
 	cursor:		crosshair;
-	-webkit-transform: rotate(30deg);
+#	-webkit-transform: rotate(30deg);
 }
 .hide {
 	display:	none;
