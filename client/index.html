@@ -35,8 +35,9 @@
         </ul>
         </section>
         <section class="buttom">
-        <label for="join_player" class="small">Your name:</label> <input type="text" id="join_player" name="join_player" />
-        <input type="button" value="join game" name="submit" onclick="join_game();switch_play_game();return false">
+	 <style> :invalid { background-color: red; } </style>
+        <label for="join_player" class="small">Your name:</label> <input type="required" id="join_player" name="join_player" onchange="doenabled(this.value, 'join_join')" />
+        <input id="join_join" type="button" value="join game" name="submit" onclick="join_game();switch_play_game();return false" disabled="disabled" >
         </section>
     </section>
   </article>
@@ -60,7 +61,8 @@
         </fieldset>
   </article>
   <article class="hide" id="game">
-        <section class="left-big">
+        <section class="left-big" id="sectionCanvas">
+             <input type="button" name="submit" value="renderAll" onclick="showAll();return false"/>
         	<p>Game: <span id="lblGame"></span>, player: <span id="lblPlayer"></span></p>
                 <canvas id="canvas" onclick="this.style.cursor='crosshair';" >
                 </canvas>

@@ -3,102 +3,72 @@ var games = new Array();
 // setup socket
 io.setPath('/js/');
 
-function esc(msg){
-    return msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  };
-
 /**
  * eval incoming messages
  * 
  * @param JSON parsed message from server 
  */
 function message(obj){
-  console.log(obj);
-  if ('message' in obj) {
-	  // add new player to player list
-	  //li.innerHTML = esc(obj.message[0]);
-	  //document.getElementById('init_list_players').appendChild(li);
-	  $('#init_list_players').append($('<li></li>').text(obj.message[0]));
-  }
-  // add new games and players to list
-  else if (obj.type == 'game'){
-	  // add to games list
-	  for(my_game in obj.arguments){
-		  games.arguments[my_game] = obj.arguments[my_game];  
-	  }
-	  console.log('add new players');
-	  // clear player lists
-	  $('#game_list_players').html('');
-	  $('#init_list_players').html('');
-	  // rebuild player lists
-	  for(my_game in obj.arguments){
-		  for(my_players in obj.arguments[my_game].players){
-			  console.log('add new player');
-			  console.log(my_players);
-			  $('#game_list_players').append('<li>'+my_players+'</li>');
-			  $('#init_list_players').append('<li>'+my_players+'</li>');
-		  }
-	  }
-	  // add new game
-	  for(my_game in obj.arguments){
-		  console.log('add new game: ' + my_game);
-		  $('#join_list_games').append('<option>'+my_game+'</option>');
-	  }
-  }
-  //add all games to select list
-  else if (obj.type == 'games_list') {
-	  // copy games list
-	  games = obj;
-	  for(key in obj.arguments){
-		  console.log('add game:' + key);
-		  //var option = document.createElement('option');
-		  //option.value=key;
-		  //option.text=key;
-		  //console.log(option);
-		  $('#join_list_games').append($('<option></option>').val(key).html(key));
-		  //document.getElementById('join_list_games').appendChild(option);
-	  }
-	  //if(document.getElementById('join_list_games').childNodes.length>0){
-	  //	document.getElementById('join_list_games').childNodes[0].selected=true;
-  	  //}
-  	  if ($('#join_list_games').length > 0) {
-  	  	$("#join_list_games option:first").attr('selected','selected');
-  	  }
-  }
-  // alert players that game started
-  else if (obj.type == 'game_started') {
-	  alert('game started');
-  } else if (obj.type == "draw") {
-	  drawLine(obj.arguments.line);
-  } else if (obj.type == "done_players") {
-	  console.log('globale games var:');
-	  console.log(games);
-	  // refresh done players
-	  games.arguments[game.name].done_players = obj.arguments;
-	  // get position of current player in list of all players
-	  current_player_position = 0;
-	  for(one_player in games.arguments[game.name].players){
-		  if(one_player == game.player){
-			  break;
-		  }
-		  current_player_position++;
-	  }
-	  console.log('current player position: ' + current_player_position);
-	  // get position of latest done player in list of all players
-	  current_player_done_position = 0;
-	  for(one_player in games.arguments[game.name].players){
-		  if(one_player == obj.arguments[obj.arguments.length-1]){
-			  break;
-		  }
-		  current_player_done_position++;
-	  }
-	  console.log('current done player position: ' + current_player_done_position);
-	  // enable pass on button if current player is after last done player in the players list
-	  if(current_player_done_position+1 == current_player_position){
-		  $('#pass_on_button')[0].disabled=false;
-	  }
-	  clear_canvas();
-  }
+	console.log(obj);
+	if ('message' in obj) {
+		// add new player to player list
+		$('#init_list_players').append($('<li></li>').text(obj.message[0]));
+	}
+	// add new games and players to list
+	else if (obj.type == 'game'){
+		// add to games list
+		for(my_game in obj.arguments){
+			games.arguments[my_game] = obj.arguments[my_game];  
+		}
+		console.log('add new players');
+		// clear player lists
+		$('#game_list_players').html('');
+		$('#init_list_players').html('');
+		// rebuild player lists
+		for(my_game in obj.arguments){
+			for(my_players in obj.arguments[my_game].players){
+				console.log('add new player');
+				console.log(my_players);
+				$('#game_list_players').append($('<li></li>').text(my_players));
+				$('#init_list_players').append($('<li></li>').text(my_players));
+			}
+		}
+		// add new game
+		for(my_game in obj.arguments){
+			console.log('add new game: ' + my_game);
+			$('#join_list_games').append($('<option></option>').text(my_game));
+		}
+	}
+	//add all games to select list
+	else if (obj.type == 'games_list') {
+		// copy games list
+		games = obj;
+		for(key in obj.arguments){
+			console.log('add game:' + key);
+			$('#join_list_games').append($('<option></option>').val(key).html(key));
+		}
+  		if ($('#join_list_games').length > 0) {
+			$("#join_list_games option:first").attr('selected','selected');
+		}
+	}
+	// alert players that game started
+	else if (obj.type == 'game_started') {
+		alert('game started');
+	} else if (obj.type == "draw") {
+		var line = obj.arguments.line;
+		drawLine(line);
+		saveLine(line, obj.arguments.player);
+	} else if (obj.type == "done_players") {
+		console.log('globale games var:');
+		console.log(games);
+		// refresh done players
+		games.arguments[game.name].done_players = obj.arguments;
+		if (is_current_player()) {
+			//TODO
+			setTimeout('clear_canvas()', 1500);
+			$('#pass_on_button')[0].disabled=false;
+		}
+	}
 }
 
 // open socket
@@ -109,10 +79,8 @@ var game = new Object();
 function setGame(gameName, player) {
 	game.player = player;
 	game.name = gameName;
-	var playerNode = document.createTextNode(player);
-	document.getElementById('lblPlayer').appendChild(playerNode);
-	var gameNode = document.createTextNode(game.name);
-	document.getElementById('lblGame').appendChild(gameNode);
+	$('#lblGame').append(document.createTextNode(gameName));
+	$('#lblPlayer').append(document.createTextNode(player));
 }
 
 // call message function when receiving new data through socket
@@ -131,8 +99,8 @@ socket.on('message', function(data){
  * init a game
  */
 function switch_init_game(){
-	document.getElementById('options_game').className='hide';
-	document.getElementById('init').className='';
+	$('#options_game').className='hide';
+	$('#init').className='';
 }
 
 /**
@@ -232,6 +200,33 @@ function pass_on(){
 	//switch_play_game();
 };
 
+function is_current_player() {
+	// get position of current player in list of all players
+	current_player_position = 0;
+	for(one_player in games.arguments[game.name].players){
+		if(one_player == game.player){
+			break;
+		}
+		current_player_position++;
+	}
+	console.log('current player position: ' + current_player_position);
+	// get position of latest done player in list of all players
+	current_player_done_position = 0;
+	for(one_player in games.arguments[game.name].players){
+		if(one_player == obj.arguments[obj.arguments.length-1]){
+			break;
+		}
+		current_player_done_position++;
+	}
+	console.log('current done player position: ' + current_player_done_position);
+	// enable pass on button if current player is after last done player in the players list
+	if(current_player_done_position+1 == current_player_position){
+		return true;
+	} else {
+		return false;
+	}
+}
+
 function send(type, line) {
 	var json = new Object();
 	json.type = type;
@@ -245,3 +240,10 @@ function send(type, line) {
 	console.log(ser);
 	socket.send(ser);
 }
+
+function doenabled(text, idid) {
+	if (text.length > 0)
+		document.getElementById(idid).disabled = false;
+	else
+		document.getElementById(idid).disabled = true;
+  }
