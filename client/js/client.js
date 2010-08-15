@@ -190,3 +190,10 @@ function send(type, line) {
 	console.log(ser);
 	socket.send(ser);
 }
+
+function doenabled(text, idid) {
+	if (text.length > 0)
+		document.getElementById(idid).disabled = false;
+	else
+		document.getElementById(idid).disabled = true;
+  }

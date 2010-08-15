@@ -35,8 +35,9 @@
         </ul>
         </section>
         <section class="buttom">
-        <label for="join_player" class="small">Your name:</label> <input type="text" id="join_player" name="join_player" />
-        <input type="button" value="join game" name="submit" onclick="join_game();switch_play_game();return false">
+	 <style> :invalid { background-color: red; } </style>
+        <label for="join_player" class="small">Your name:</label> <input type="required" id="join_player" name="join_player" onchange="doenabled(this.value, 'join_join')" />
+        <input id="join_join" type="button" value="join game" name="submit" onclick="join_game();switch_play_game();return false" disabled="disabled" >
         </section>
     </section>
   </article>
@@ -45,9 +46,9 @@
         <fieldset>
         <legend>register</legend>
 	<style> :invalid { background-color: red; } </style>
-        <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" /><br />
-        <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" /><br />
-        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();switch_play_game();return false" />
+        <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" onchange="doenabled(this.value, 'init_player')" /><br />
+        <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" onchange="doenabled(this.value, 'init_register')" disabled="disabled"/><br />
+        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();switch_play_game();return false" disabled="disabled" />
         </fieldset>
     </section>
     <section class="right">
