@@ -190,3 +190,17 @@ function send(type, line) {
 	console.log(ser);
 	socket.send(ser);
 }
+
+function pass_on() {
+	var data = new Object();
+	data.game = game;
+	data.player = player;
+	socket.send(serialize("pass_on", data));
+}
+
+function serialize(key, value) {
+	var data = new Object();
+	data.type = key;
+	data.arguments = value;
+	return JSON.stringify(data);
+}
