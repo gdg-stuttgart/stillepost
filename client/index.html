@@ -18,8 +18,8 @@
     	<form>
     	<fieldset>
     	<legend>options</legend>
-    	<input type="button" name="option" value="init game" onclick="switch_init_game(); return false" />
-    	<input type="button" name="option" value="join game" onclick="switch_join_game(); return false" />
+    	<input type="button" name="option" value="init game" onkeyup="switch_init_game(); return false" />
+    	<input type="button" name="option" value="join game" onkeyup="switch_join_game(); return false" />
     	</fieldset>
     	</form>
     </section>
@@ -27,7 +27,7 @@
   <article class="hide" id="join">
     <section>
         <section class="left">
-        <select size="15" id="join_list_games" onchange="join_display_players(this)">	<!--Liste aller Spiele-->
+        <select size="15" id="join_list_games" onkeyup="join_display_players(this)">	<!--Liste aller Spiele-->
         </select>
         </section>
         <section class="rigth">
@@ -46,9 +46,9 @@
         <fieldset>
         <legend>register</legend>
 	<style> :invalid { background-color: red; } </style>
-        <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" /><br />
-        <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" /><br />
-        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();return false" />
+        <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" onchange="doenabled(this.value, 'init_player')" /><br />
+        <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" onchange="doenabled(this.value, 'init_register')" disabled="disabled"/><br />
+        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();switch_play_game();return false" disabled="disabled" />
         </fieldset>
     </section>
     <section class="right">
