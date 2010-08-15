@@ -96,15 +96,17 @@ io.on('connection', function(client) {
 	});
 	
 	function create_game(data) {
-		console.log("Creating game: " + data.game);
-		games[data.game] = new Object();
-		games[data.game].players = new Object();
-		games[data.game].players[data.player] = create_player(data.game);
-		client.broadcast(serialize("game", games[data.game]));
+		if (data.game.length > 0 && data.player.length > 0) {
+			console.log("Creating game: " + data.game);
+			games[data.game] = new Object();
+			games[data.game].players = new Object();
+			games[data.game].players[data.player] = create_player(data.game);
+			client.broadcast(serialize("game", games[data.game]));
+		}
 	}
 
 	function join_game(data) {
-		if (data.game != "") {
+		if (data.game.length > 0 && data.player.length > 0) {
 			games[data.game].players[data.player] = create_player(data.game);
 			client.broadcast(serialize("game", games[data.game]));
 		}

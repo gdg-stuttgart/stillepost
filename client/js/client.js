@@ -14,11 +14,24 @@ function esc(msg){
  */
 function message(obj){
   games = obj;
+  console.log(obj);
   if ('message' in obj) {
 	  // add new player to player list
 	  //li.innerHTML = esc(obj.message[0]);
 	  //document.getElementById('init_list_players').appendChild(li);
 	  $('#init_list_players').append($('<li></li>').text(obj.message[0]));
+  }
+  // add new players to list
+  else if (obj.type == 'game'){
+	  console.log('add new players');
+	  // clear player list
+	  $('#game_list_players').html('');
+	  // rebuild player list
+	  for(my_players in obj.arguments.players){
+		  console.log('add new player');
+		  console.log(my_players);
+		  $('#game_list_players').append('<li>'+my_players+'</li>');
+	  }
   }
   //add all games to select list
   else if (obj.type == 'games_list') {
@@ -124,6 +137,11 @@ function create_game(){
 	li.innerHTML = player;
 	document.getElementById('init_list_players').removeChild(document.getElementById('init_list_players').childNodes[1]);
 	document.getElementById('init_list_players').appendChild(li);
+	// clear player list
+	$('#game_list_players').html('');
+	// add yourself to player list
+	console.log('add new player');
+	$('#game_list_players').append('<li>'+player+'</li>');
 }
 
 /**
@@ -134,6 +152,14 @@ function join_game(){
 	var player = document.getElementById('join_player').value;
 	setGame(name, player);
 	send("join_game");
+	// clear player list
+	$('#game_list_players').html('');
+	// rebuild player list
+	for(my_players in games.arguments[name].players){
+		$('#game_list_players').append('<li>'+my_players+'</li>');
+	}
+	// add yourself to player list
+	$('#game_list_players').append('<li>'+player+'</li>');
 };
 
 function send(type, line) {
