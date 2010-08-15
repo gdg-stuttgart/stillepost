@@ -94,7 +94,7 @@ function message(obj){
 }
 
 function updateCurrentPlayer(player) {
-	document.getElementById("game_canvas_replacement").firstChild.nodeValue = player;
+	document.getElementById("game_canvas_replacement").firstChild.nodeValue = "Currently drawing: " + player;
 }
 
 // open socket
