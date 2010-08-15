@@ -80,6 +80,7 @@ function getHistory(player) {
 }
 
 function showAll() {
+	$('#canvas')[0].className='hide';
 	for (player in drawHistory) {
 		drawCanvas(createCanvas(player), player);
 	}
