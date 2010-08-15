@@ -13,7 +13,6 @@ function esc(msg){
  * @param JSON parsed message from server 
  */
 function message(obj){
-  games = obj;
   console.log(obj);
   if ('message' in obj) {
 	  // add new player to player list
@@ -21,20 +20,33 @@ function message(obj){
 	  //document.getElementById('init_list_players').appendChild(li);
 	  $('#init_list_players').append($('<li></li>').text(obj.message[0]));
   }
-  // add new players to list
+  // add new games and players to list
   else if (obj.type == 'game'){
+	  // add to games list
+	  for(my_game in obj.arguments){
+		  games.arguments[my_game] = obj.arguments[my_game];  
+	  }
 	  console.log('add new players');
 	  // clear player list
 	  $('#game_list_players').html('');
 	  // rebuild player list
-	  for(my_players in obj.arguments.players){
-		  console.log('add new player');
-		  console.log(my_players);
-		  $('#game_list_players').append('<li>'+my_players+'</li>');
+	  for(my_game in obj.arguments){
+		  for(my_players in my_game.players){
+			  console.log('add new player');
+			  console.log(my_players);
+			  $('#game_list_players').append('<li>'+my_players+'</li>');
+		  }
+	  }
+	  // add new game
+	  for(my_game in obj.arguments){
+		  console.log('add new game: ' + my_game);
+		  $('#join_list_games').append('<option>'+my_game+'</option>');
 	  }
   }
   //add all games to select list
   else if (obj.type == 'games_list') {
+	  // copy games list
+	  games = obj;
 	  for(key in obj.arguments){
 		  console.log('add game:' + key);
 		  //var option = document.createElement('option');
@@ -76,7 +88,7 @@ socket.on('message', function(data){
 		return;
 	}
 	var obj = JSON.parse(data);
-	console.log("Received "+obj.type+"-event from " + obj.arguments.player);
+	console.log("Received "+obj.type+"-event from " + obj.arguments.player + ", plain: "+data);
 	message(obj);
 }); 
 
@@ -110,11 +122,14 @@ function switch_play_game() {
  */
 function join_display_players(selectElement){
 	console.log('join_display_players');
+	// game name
 	var key = selectElement.options[selectElement.selectedIndex].text;
-	for(i = 0; i< document.getElementById('join_list_players').childNodes.length; i++){
-		document.getElementById('join_list_players').removeChild(document.getElementById('join_list_players').childNodes[i]);
-	}
-	for(player in games[key].players){
+	// clear players list
+	$('#join_list_players').html('');
+	// add players of selected game
+	console.log(games);
+	console.log(key);
+	for(player in games.arguments[key].players){
 		var li = document.createElement('li');
 		li.innerHTML = player;
 		document.getElementById('join_list_players').appendChild(li);
