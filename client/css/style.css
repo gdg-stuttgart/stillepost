@@ -5,10 +5,12 @@ h1 {
 }
 section.left, section.left-big {
 	width:		50%;
+	height:		80%;
 	float:		left;
 }
 section.right, section.right-small {
 	width:		50%;
+	height:		80%;
 	float:		right;
 }
 section.right-small {
@@ -28,9 +30,10 @@ label.small {
 	width:		80px;
 }
 canvas {
-	border:		5px radge #003000;
+	border:		5px ridge #003000;
 	height:		400px;
 	width:		600px;
+	cursor:		crosshair;
 }
 .hide {
 	display:	none;
