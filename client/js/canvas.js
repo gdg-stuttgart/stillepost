@@ -1,5 +1,7 @@
 var canvas = null;
 var lastMousePosition= null;
+var drawHistory = new Object();
+
 var canvasRegistrationFn = function() {
 	canvas = document.getElementById('canvas');
 	canvas.addEventListener('mousedown', canvasOnMouseDown, false);
@@ -28,6 +30,7 @@ var canvasOnMouseMove = function(e) {
 	line = [lastMousePosition, current];
 	lastMousePosition = current;
 	drawLine(line);
+	saveLine(line);
 	send("draw", line);
 };
 
@@ -41,8 +44,11 @@ if ('attachEvent' in window) {
 	window.addEventListener('load', canvasRegistrationFn, false);
 }
 
-function drawLine(line) {
-	context = document.getElementById('canvas').getContext("2d");
+function drawLine(line, canvas) {
+	if (canvas == null) {
+		canvas = document.getElementById('canvas'); 
+	}
+	context = canvas.getContext("2d");
 	context.beginPath();
 	from = line[0];
 	to = line[1];
@@ -53,5 +59,46 @@ function drawLine(line) {
 }
 
 function clear_canvas() {
+	var context = $('#canvas').getContext("2d");
 	context.clearRect(0, 0, canvas.width, canvas.height);
 }
+
+function saveLine(line, player) {
+	if (player == null) {
+		player = game.player;
+	}
+	getHistory(player).push(line);
+}
+
+function getHistory(player) {
+	var result = drawHistory[player] ;
+	if (result == null) {
+		result = new Array();
+		drawHistory[player] = result;
+	}
+	return result;
+}
+
+function showAll() {
+	var ctx = canvas.getContext("2d");
+	for (player in drawHistory) {
+		var playerCanvas = createCanvas(player);
+		var lines = getHistory(player);
+		for (i = 0; i < lines.length; i++) {
+			drawLine(lines[i], playerCanvas);
+		}	
+	}
+}
+
+function createCanvas(player) {
+	var section = document.getElementById("sectionCanvas");
+	var playerCanvas = document.createElement('canvas');
+	playerCanvas.setAttribute('width', canvas.width);
+	playerCanvas.setAttribute('height', canvas.height);
+	playerCanvas.setAttribute('id', 'canvas' + player);
+	section.appendChild(playerCanvas);
+	var ctx = playerCanvas.getContext("2d");
+	ctx.fillText(player, 10, 10);
+	return playerCanvas;
+}
+
