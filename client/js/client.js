@@ -200,7 +200,7 @@ function pass_on(){
 	//switch_play_game();
 };
 
-function is_current_player() {
+function is_current_player(obj) {
 	// get position of current player in list of all players
 	current_player_position = 0;
 	for(one_player in games.arguments[game.name].players){
