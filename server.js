@@ -88,6 +88,8 @@ io.on('connection', function(client) {
 			create_game(arguments);
 		} else if (msg.type == "join_game") {
 			join_game(arguments);
+		} else if (msg.type == "start_game") {
+			start_game(arguments);
 		} else if (msg.type == "pass_on") {
 			pass_on(arguments);
 		}
@@ -101,6 +103,7 @@ io.on('connection', function(client) {
 		if (data.game.length > 0 && data.player.length > 0) {
 			console.log("Creating game: " + data.game);
 			games[data.game] = new Object();
+			games[data.game].started = false;
 			games[data.game].ready_players = [];
 			games[data.game].players = new Object();
 			games[data.game].players[data.player] = create_player(data.game);
@@ -110,9 +113,16 @@ io.on('connection', function(client) {
 
 	function join_game(data) {
 		if (data.game.length > 0 && data.player.length > 0) {
-			games[data.game].players[data.player] = create_player(data.game);
-			client.broadcast(serialize("game", game(data.game)));
+			if (!games[data.game].started) {
+				games[data.game].players[data.player] = create_player(data.game);
+				client.broadcast(serialize("game", game(data.game)));
+			}
 		}
+	}
+	
+	function start_game(data) {
+		games[data.game].started = true;
+		client.broadcast(serialize("game_started", data.game));
 	}
 	
 	function pass_on(data) {
