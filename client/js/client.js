@@ -18,7 +18,7 @@ function message(obj){
 	  // add new player to player list
 	  //li.innerHTML = esc(obj.message[0]);
 	  //document.getElementById('init_list_players').appendChild(li);
-	  $('#init_list_players').append($('<li></li>')).text(obj.message[0]);
+	  $('#init_list_players').append($('<li></li>').text(obj.message[0]));
   }
   //add all games to select list
   else if (obj.type == 'games_list') {
