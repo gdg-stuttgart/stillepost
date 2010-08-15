@@ -71,6 +71,14 @@ function message(obj){
 		console.log(games);
 		// refresh done players
 		games.arguments[game.name].done_players = obj.arguments;
+		// show history if last player is done
+		var player_size = 0;
+		for (var k in games.arguments[game.name].players){
+			player_size++;
+		}
+		if(games.arguments[game.name].done_players.length == player_size){
+			showAll();
+		}
 		if (is_current_player(obj)) {
 			drawCanvas(canvas, obj.arguments[obj.arguments.length - 1]);
 			setTimeout('clear_canvas()', 2000);
@@ -80,6 +88,7 @@ function message(obj){
 		else {
 			updateCurrentPlayer();
 		}
+		 
 	}
 }
 
@@ -219,11 +228,23 @@ function show_canvas() {
  * current player passes the game on to the next player and sees what the next users draw
  */
 function pass_on(){
+	// send via websocket
 	send('pass_on');
+	// disable pass on button for player
 	$('#pass_on_button')[0].disabled=true;
+	// clear own canvas
 	clear_canvas();
-	// disable pass on button for initiator
-	//switch_play_game();
+	// add yourself to done player object
+	games.arguments[game.name].done_players.push(game.player);
+	// get size of players object
+	var player_size = 0;
+	for (var k in games.arguments[game.name].players){
+		player_size++;
+	}
+	// show history if last player is done
+	if(games.arguments[game.name].done_players.length == player_size){
+		showAll();
+	}
 };
 
 function is_current_player(obj) {
