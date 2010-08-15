@@ -45,8 +45,8 @@
         <fieldset>
         <legend>register</legend>
 	<style> :invalid { background-color: red; } </style>
-        <label for="init_new_game" class="small">game name:</label> <input type="color" name="init_new_game" id="init_new_game" /><br />
-        <label for="init_player" class="small">your name:</label> <input type="text" name="init_player" id="init_player" /><br />
+        <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" /><br />
+        <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" /><br />
         <input type="button" name="submit" value="register" id="init_register" onclick="create_game();switch_play_game();return false" />
         </fieldset>
     </section>
