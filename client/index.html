@@ -64,8 +64,9 @@
         <section class="left-big" id="sectionCanvas">
              <input type="button" name="submit" value="renderAll" onclick="showAll();return false"/>
         	<p>Game: <span id="lblGame"></span>, player: <span id="lblPlayer"></span></p>
-                <canvas id="canvas" onclick="this.style.cursor='crosshair';" >
+                <canvas class="hide" id="canvas" onclick="this.style.cursor='crosshair';" >
                 </canvas>
+                <span id="game_canvas_replacement">Game not yet started.</span>
         </section>
         <section class="right-small">
                 <ul id="game_list_players">

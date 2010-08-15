@@ -55,6 +55,10 @@ function message(obj){
 	else if (obj.type == 'game_started') {
 		alert('game started');
 		games.arguments[game.name].started=true;
+		for (player in games.arguments[game.name].players) {
+			updateCurrentPlayer(player);
+			break;
+		}
 	} else if (obj.type == "draw") {
 		var line = obj.arguments.line;
 		drawLine(line);
@@ -71,8 +75,16 @@ function message(obj){
 			drawCanvas(canvas, obj.arguments[obj.arguments.length - 1]);
 			setTimeout('clear_canvas()', 2000);
 			$('#pass_on_button')[0].disabled=false;
+			show_canvas();
+		}
+		else {
+			updateCurrentPlayer();
 		}
 	}
+}
+
+function updateCurrentPlayer(player) {
+	document.getElementById("game_canvas_replacement").firstChild.nodeValue = player;
 }
 
 // open socket
@@ -195,7 +207,13 @@ function start_game(){
 	games.arguments[game.name].started=true;
 	// enable pass on button for initiator
 	$('#pass_on_button')[0].disabled=false;
+	show_canvas();
 };
+
+function show_canvas() {
+	$('#game_canvas_replacement')[0].className="hide";
+	$('#canvas')[0].className="";
+}
 
 /**
  * current player passes the game on to the next player and sees what the next users draw
