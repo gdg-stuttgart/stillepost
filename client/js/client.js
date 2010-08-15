@@ -31,7 +31,7 @@ function message(obj){
 	  $('#game_list_players').html('');
 	  // rebuild player list
 	  for(my_game in obj.arguments){
-		  for(my_players in my_game.players){
+		  for(my_players in obj.arguments[my_game].players){
 			  console.log('add new player');
 			  console.log(my_players);
 			  $('#game_list_players').append('<li>'+my_players+'</li>');
