@@ -27,14 +27,16 @@ function message(obj){
 		  games.arguments[my_game] = obj.arguments[my_game];  
 	  }
 	  console.log('add new players');
-	  // clear player list
+	  // clear player lists
 	  $('#game_list_players').html('');
-	  // rebuild player list
+	  $('#init_list_players').html('');
+	  // rebuild player lists
 	  for(my_game in obj.arguments){
 		  for(my_players in obj.arguments[my_game].players){
 			  console.log('add new player');
 			  console.log(my_players);
 			  $('#game_list_players').append('<li>'+my_players+'</li>');
+			  $('#init_list_players').append('<li>'+my_players+'</li>');
 		  }
 	  }
 	  // add new game
@@ -62,8 +64,15 @@ function message(obj){
   	  if ($('#join_list_games').length > 0) {
   	  	$("#join_list_games option:first").attr('selected','selected');
   	  }
+  }
+  // alert players that game started
+  else if (obj.type == 'game_started') {
+	  alert('game started');
   } else if (obj.type == "draw") {
 	  drawLine(obj.arguments.line);
+  } else if (obj.type == "done_players") {
+	  clear_canvas();
+	  games[game.name].done_players = obj.arguments;
   }
 }
 
@@ -175,6 +184,25 @@ function join_game(){
 	}
 	// add yourself to player list
 	$('#game_list_players').append('<li>'+player+'</li>');
+};
+
+/**
+ * initiator starts the game and switches to canvas view
+ */
+function start_game(){
+	send('start_game');
+	switch_play_game();
+	// enable pass on button for initiator
+	$('#pass_on_button')[0].disabled=false;
+};
+
+/**
+ * current player passes the game on to the next player and sees what the next users draw
+ */
+function pass_on(){
+	send('pass_on');
+	clear_canvas();
+	//switch_play_game();
 };
 
 function send(type, line) {

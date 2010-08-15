@@ -46,21 +46,25 @@
         <fieldset>
         <legend>register</legend>
 	<style> :invalid { background-color: red; } </style>
+<<<<<<< HEAD
         <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" onchange="doenabled(this.value, 'init_player')" /><br />
         <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" onchange="doenabled(this.value, 'init_register')" disabled="disabled"/><br />
         <input type="button" name="submit" value="register" id="init_register" onclick="create_game();switch_play_game();return false" disabled="disabled" />
+=======
+        <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" /><br />
+        <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" /><br />
+        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();return false" />
+>>>>>>> 816ed191a60e1a4aa937b7f44911dd1338a60d92
         </fieldset>
     </section>
     <section class="right">
-        <form action="">
         <fieldset>
         <legend>player list</legend>
         <ul id="init_list_players">
                 <li>you</li>
         </ul>
-        <input type="submit" name="submit" value="start game" />
+        <input type="button" name="submit" value="start game" onclick="start_game(); return false" />
         </fieldset>
-        </form>
   </article>
   <article class="hide" id="game">
         <section class="left-big">
@@ -72,10 +76,7 @@
                 <ul id="game_list_players">
                         <li>players</li>
                 </ul>
-                <form action="">
-                		<input type="submit" value="start game" name="submit" />
-                        <input type="submit" value="pass on" name="submit" />
-                </form>
+                <input type="submit" id="pass_on_button" value="pass on" name="submit" disabled="disabled" onclick="pass_on(); return false" />
   </article>
   <footer>GTUG Campout Project</footer>
   </body>
