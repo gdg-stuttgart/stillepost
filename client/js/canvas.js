@@ -42,7 +42,7 @@ if ('attachEvent' in window) {
 }
 
 function drawLine(line) {
-	context = document.getElementById('canvas').getContext("2d");
+	var context = $('#canvas').getContext("2d");
 	context.beginPath();
 	from = line[0];
 	to = line[1];
@@ -53,5 +53,6 @@ function drawLine(line) {
 }
 
 function clear_canvas() {
+	var context = $('#canvas').getContext("2d");
 	context.clearRect(0, 0, canvas.width, canvas.height);
 }
