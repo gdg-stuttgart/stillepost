@@ -59,6 +59,7 @@ function message(obj){
 		drawLine(line);
 		saveLine(line, obj.arguments.player);
 	} else if (obj.type == "done_players") {
+		clear_canvas();
 		console.log('globale games var:');
 		console.log(games);
 		// refresh done players
