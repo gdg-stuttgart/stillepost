@@ -1,0 +1,33 @@
+Beschreibung:
+
+init game:
+
+	1. Spieler und Spiel Name wird eingegeben
+	2. register Button wird betätigt.
+		-alle Elemente in register Bereich werden deaktiviert.
+		-Spiel taucht in der Spiel Liste des join auf.
+		-Spieler Liste zeigt eigenen Namen
+		 und die Namen der Spieler die zu seine Game
+		 join gesagt haben.
+	3. start game wird betätigt
+		-Spiel wird aus der join game list gelöscht.
+		-Das spiel startet Initiator sieht canvas und
+		 kann zeichnen.
+		-Die anderen Spieler warten.
+	4. Es wird gezeichnet
+	5. Er übergibt und sieht wie die anderen sein Bild nachzeichnen
+
+join game:
+
+	1. Spiel wird ausgewählt
+		-Lister der Spieler, welche dieses Spiel spielen
+		 möchten wird angezeigt.
+	2. Ist das Spiel gewählt, wird der Spieler Name eingetragen
+	   und auf join geklickt.
+		-Spieler ist an der stelle dran, in der sein Name in
+		 der Liste steht.
+		-Spieler wird auf das Spiel verlinkt und sieht
+		 dort das canvas Element rotieren bis er dran ist.
+	3. Er ist dran und sieht das Bild des Vorgängers für 5sec
+	   und zeichnet es dann nach
+	4. Gibt das Spiel weiter und sieht was die nach ihn zeichnen.
