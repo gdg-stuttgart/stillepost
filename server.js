@@ -88,6 +88,8 @@ io.on('connection', function(client) {
 			create_game(arguments);
 		} else if (msg.type == "join_game") {
 			join_game(arguments);
+		} else if (msg.type == "pass_on") {
+			pass_on(arguments);
 		}
 	});
 
@@ -101,15 +103,20 @@ io.on('connection', function(client) {
 			games[data.game] = new Object();
 			games[data.game].players = new Object();
 			games[data.game].players[data.player] = create_player(data.game);
-			client.broadcast(serialize("game", games[data.game]));
+			client.broadcast(serialize("game", game(data.game)));
 		}
 	}
 
 	function join_game(data) {
 		if (data.game.length > 0 && data.player.length > 0) {
 			games[data.game].players[data.player] = create_player(data.game);
-			client.broadcast(serialize("game", games[data.game]));
+			client.broadcast(serialize("game", game(data.game)));
 		}
+	}
+	
+	function pass_on(data) {
+		//data.current_rank = ++(games[data.game].current_rank);
+		//client.broadcast(serialize("current_rank", data));
 	}
 
 	function draw_line(data) {
@@ -130,4 +137,10 @@ function serialize(key, value) {
 	data.type = key;
 	data.arguments = value;
 	return JSON.stringify(data);
+}
+
+function game(key) {
+	var data = new Object();
+	data[key] = games[key];
+	return data;
 }
