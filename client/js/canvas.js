@@ -80,14 +80,16 @@ function getHistory(player) {
 }
 
 function showAll() {
-	var ctx = canvas.getContext("2d");
 	for (player in drawHistory) {
-		var playerCanvas = createCanvas(player);
-		var lines = getHistory(player);
-		for (i = 0; i < lines.length; i++) {
-			drawLine(lines[i], playerCanvas);
-		}	
+		drawCanvas(createCanvas(player), player);
 	}
+}
+
+function drawCanvas(canvas, player) {
+	var lines = getHistory(player);
+	for (i = 0; i < lines.length; i++) {
+		drawLine(lines[i], canvas);
+	}	
 }
 
 function createCanvas(player) {
