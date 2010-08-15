@@ -33,8 +33,9 @@ function message(obj){
 				$('#init_list_players').append($('<li></li>').text(my_players));
 			}
 		}
-		// add new game
-		for(my_game in obj.arguments){
+		// refresh games list
+		$('#join_list_games').html('');
+		for(my_game in games.arguments){
 			console.log('add new game: ' + my_game);
 			$('#join_list_games').append($('<option></option>').text(my_game));
 		}
