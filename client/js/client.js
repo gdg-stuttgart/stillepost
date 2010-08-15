@@ -54,6 +54,7 @@ function message(obj){
 	// alert players that game started
 	else if (obj.type == 'game_started') {
 		alert('game started');
+		games.arguments[game.name].started=true;
 	} else if (obj.type == "draw") {
 		var line = obj.arguments.line;
 		drawLine(line);
@@ -63,7 +64,7 @@ function message(obj){
 		console.log(games);
 		// refresh done players
 		games.arguments[game.name].done_players = obj.arguments;
-		if (is_current_player()) {
+		if (is_current_player(obj)) {
 			drawCanvas(canvas, tail(games[game.name].arguments.players));
 			setTimeout('clear_canvas()', 1500);
 			$('#pass_on_button')[0].disabled=false;
@@ -188,6 +189,7 @@ function join_game(){
 function start_game(){
 	send('start_game');
 	switch_play_game();
+	games.arguments[game.name].started=true;
 	// enable pass on button for initiator
 	$('#pass_on_button')[0].disabled=false;
 };
