@@ -47,7 +47,7 @@
 	<style> :invalid { background-color: red; } </style>
         <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" /><br />
         <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" /><br />
-        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();switch_play_game();return false" />
+        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();return false" />
         </fieldset>
     </section>
     <section class="right">
@@ -69,8 +69,7 @@
                 <ul id="game_list_players">
                         <li>players</li>
                 </ul>
-        		<input type="submit" value="start game" name="submit" onclick="start_game(); return false" />
-                <input type="submit" value="pass on" name="submit" onclick="pass_on(); return false" />
+                <input type="submit" id="pass_on_button" value="pass on" name="submit" disabled="disabled" onclick="pass_on(); return false" />
   </article>
   <footer>GTUG Campout Project</footer>
   </body>
