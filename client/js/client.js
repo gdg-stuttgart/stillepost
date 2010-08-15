@@ -177,6 +177,22 @@ function join_game(){
 	$('#game_list_players').append('<li>'+player+'</li>');
 };
 
+/**
+ * initiator starts the game and switches to canvas view
+ */
+function start_game(){
+	send('start_game');
+	switch_play_game();
+};
+
+/**
+ * current player passes the game on to the next player and sees what the next users draw
+ */
+function pass_on(){
+	send('pass_on');
+	//switch_play_game();
+};
+
 function send(type, line) {
 	var json = new Object();
 	json.type = type;

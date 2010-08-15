@@ -51,15 +51,13 @@
         </fieldset>
     </section>
     <section class="right">
-        <form action="">
         <fieldset>
         <legend>player list</legend>
         <ul id="init_list_players">
                 <li>you</li>
         </ul>
-        <input type="submit" name="submit" value="start game" />
+        <input type="button" name="submit" value="start game" onclick="start_game(); return false" />
         </fieldset>
-        </form>
   </article>
   <article class="hide" id="game">
         <section class="left-big">
@@ -71,10 +69,8 @@
                 <ul id="game_list_players">
                         <li>players</li>
                 </ul>
-                <form action="">
-                		<input type="submit" value="start game" name="submit" />
-                        <input type="submit" value="pass on" name="submit" />
-                </form>
+        		<input type="submit" value="start game" name="submit" onclick="start_game(); return false" />
+                <input type="submit" value="pass on" name="submit" />
   </article>
   <footer>GTUG Campout Project</footer>
   </body>
