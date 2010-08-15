@@ -29,14 +29,14 @@ function message(obj){
 			for(my_players in obj.arguments[my_game].players){
 				console.log('add new player');
 				console.log(my_players);
-				$('#game_list_players').append('<li>'+my_players+'</li>');
-				$('#init_list_players').append('<li>'+my_players+'</li>');
+				$('#game_list_players').append($('<li></li>').text(my_players));
+				$('#init_list_players').append($('<li></li>').text(my_players));
 			}
 		}
 		// add new game
 		for(my_game in obj.arguments){
 			console.log('add new game: ' + my_game);
-			$('#join_list_games').append('<option>'+my_game+'</option>');
+			$('#join_list_games').append($('<option></option>').text(my_game));
 		}
 	}
 	//add all games to select list
@@ -76,10 +76,8 @@ var game = new Object();
 function setGame(gameName, player) {
 	game.player = player;
 	game.name = gameName;
-	var playerNode = document.createTextNode(player);
-	document.getElementById('lblPlayer').appendChild(playerNode);
-	var gameNode = document.createTextNode(game.name);
-	document.getElementById('lblGame').appendChild(gameNode);
+	$('#lblGame').append(document.createTextNode(gameName));
+	$('#lblPlayer').append(document.createTextNode(player));
 }
 
 // call message function when receiving new data through socket
@@ -98,8 +96,8 @@ socket.on('message', function(data){
  * init a game
  */
 function switch_init_game(){
-	document.getElementById('options_game').className='hide';
-	document.getElementById('init').className='';
+	$('#options_game').className='hide';
+	$('#init').className='';
 }
 
 /**
