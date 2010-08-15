@@ -3,81 +3,67 @@ var games = new Array();
 // setup socket
 io.setPath('/js/');
 
-function esc(msg){
-    return msg.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  };
-
 /**
  * eval incoming messages
  * 
  * @param JSON parsed message from server 
  */
 function message(obj){
-  console.log(obj);
-  if ('message' in obj) {
-	  // add new player to player list
-	  //li.innerHTML = esc(obj.message[0]);
-	  //document.getElementById('init_list_players').appendChild(li);
-	  $('#init_list_players').append($('<li></li>').text(obj.message[0]));
-  }
-  // add new games and players to list
-  else if (obj.type == 'game'){
-	  // add to games list
-	  for(my_game in obj.arguments){
-		  games.arguments[my_game] = obj.arguments[my_game];  
-	  }
-	  console.log('add new players');
-	  // clear player lists
-	  $('#game_list_players').html('');
-	  $('#init_list_players').html('');
-	  // rebuild player lists
-	  for(my_game in obj.arguments){
-		  for(my_players in obj.arguments[my_game].players){
-			  console.log('add new player');
-			  console.log(my_players);
-			  $('#game_list_players').append('<li>'+my_players+'</li>');
-			  $('#init_list_players').append('<li>'+my_players+'</li>');
-		  }
-	  }
-	  // add new game
-	  for(my_game in obj.arguments){
-		  console.log('add new game: ' + my_game);
-		  $('#join_list_games').append('<option>'+my_game+'</option>');
-	  }
-  }
-  //add all games to select list
-  else if (obj.type == 'games_list') {
-	  // copy games list
-	  games = obj;
-	  for(key in obj.arguments){
-		  console.log('add game:' + key);
-		  //var option = document.createElement('option');
-		  //option.value=key;
-		  //option.text=key;
-		  //console.log(option);
-		  $('#join_list_games').append($('<option></option>').val(key).html(key));
-		  //document.getElementById('join_list_games').appendChild(option);
-	  }
-	  //if(document.getElementById('join_list_games').childNodes.length>0){
-	  //	document.getElementById('join_list_games').childNodes[0].selected=true;
-  	  //}
-  	  if ($('#join_list_games').length > 0) {
-  	  	$("#join_list_games option:first").attr('selected','selected');
-  	  }
-  }
-  // alert players that game started
-  else if (obj.type == 'game_started') {
-	  alert('game started');
-  } else if (obj.type == "draw") {
-	  drawLine(obj.arguments.line);
-  } else if (obj.type == "done_players") {
-	  clear_canvas();
-	  games[game.name].done_players = obj.arguments;
-	  if (is_current_player()) {
-	  	//TODO
-	  	setTimeout('clear_canvas()', 1500);
-	  }
-  }
+	console.log(obj);
+	if ('message' in obj) {
+		// add new player to player list
+		$('#init_list_players').append($('<li></li>').text(obj.message[0]));
+	}
+	// add new games and players to list
+	else if (obj.type == 'game'){
+		// add to games list
+		for(my_game in obj.arguments){
+			games.arguments[my_game] = obj.arguments[my_game];  
+		}
+		console.log('add new players');
+		// clear player lists
+		$('#game_list_players').html('');
+		$('#init_list_players').html('');
+		// rebuild player lists
+		for(my_game in obj.arguments){
+			for(my_players in obj.arguments[my_game].players){
+				console.log('add new player');
+				console.log(my_players);
+				$('#game_list_players').append('<li>'+my_players+'</li>');
+				$('#init_list_players').append('<li>'+my_players+'</li>');
+			}
+		}
+		// add new game
+		for(my_game in obj.arguments){
+			console.log('add new game: ' + my_game);
+			$('#join_list_games').append('<option>'+my_game+'</option>');
+		}
+	}
+	//add all games to select list
+	else if (obj.type == 'games_list') {
+		// copy games list
+		games = obj;
+		for(key in obj.arguments){
+			console.log('add game:' + key);
+			$('#join_list_games').append($('<option></option>').val(key).html(key));
+		}
+  		if ($('#join_list_games').length > 0) {
+			$("#join_list_games option:first").attr('selected','selected');
+		}
+	}
+	// alert players that game started
+	else if (obj.type == 'game_started') {
+		alert('game started');
+	} else if (obj.type == "draw") {
+		drawLine(obj.arguments.line);
+	} else if (obj.type == "done_players") {
+		clear_canvas();
+		games[game.name].done_players = obj.arguments;
+		if (is_current_player()) {
+			//TODO
+			setTimeout('clear_canvas()', 1500);
+		}
+	}
 }
 
 // open socket
