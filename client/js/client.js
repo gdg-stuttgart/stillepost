@@ -64,7 +64,7 @@ function message(obj){
 		// refresh done players
 		games.arguments[game.name].done_players = obj.arguments;
 		if (is_current_player()) {
-			//TODO
+			drawCanvas(canvas, tail(games[game.name].arguments.players));
 			setTimeout('clear_canvas()', 1500);
 			$('#pass_on_button')[0].disabled=false;
 		}
@@ -247,3 +247,11 @@ function doenabled(text, idid) {
 	else
 		document.getElementById(idid).disabled = true;
   }
+  
+function tail(hash) {
+	var current_player = null;
+	for (player in hash) {
+		current_player = player;
+	}
+	return current_player;
+}
