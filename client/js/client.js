@@ -60,6 +60,8 @@ function message(obj){
 		drawLine(line);
 		saveLine(line, obj.arguments.player);
 	} else if (obj.type == "done_players") {
+		console.log('current drawer: ');
+		console.log(get_current_drawer(obj));
 		clear_canvas();
 		console.log('globale games var:');
 		console.log(games);
@@ -230,6 +232,23 @@ function is_current_player(obj) {
 		return true;
 	} else {
 		return false;
+	}
+}
+
+/**
+ * returns the current drawer
+ * @param done_players
+ * @returns
+ */
+function get_current_drawer(done_players){
+	var stop_next = false;
+	for(one_player in games.arguments[game.name].players){
+		if(stop_next){
+			return one_player;
+		}
+		if(one_player == done_players.arguments[done_players.arguments.length-1]){
+			stop_next = true;
+		}
 	}
 }
 
