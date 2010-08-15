@@ -63,7 +63,7 @@ function message(obj){
 		console.log(games);
 		// refresh done players
 		games.arguments[game.name].done_players = obj.arguments;
-		if (is_current_player()) {
+		if (is_current_player(obj)) {
 			//TODO
 			setTimeout('clear_canvas()', 1500);
 			$('#pass_on_button')[0].disabled=false;
@@ -200,7 +200,7 @@ function pass_on(){
 	//switch_play_game();
 };
 
-function is_current_player() {
+function is_current_player(obj) {
 	// get position of current player in list of all players
 	current_player_position = 0;
 	for(one_player in games.arguments[game.name].players){
