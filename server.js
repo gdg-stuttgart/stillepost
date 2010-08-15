@@ -104,7 +104,7 @@ io.on('connection', function(client) {
 			console.log("Creating game: " + data.game);
 			games[data.game] = new Object();
 			games[data.game].started = false;
-			games[data.game].ready_players = [];
+			games[data.game].done_players = [];
 			games[data.game].players = new Object();
 			games[data.game].players[data.player] = create_player(data.game);
 			client.broadcast(serialize("game", game(data.game)));
@@ -128,8 +128,8 @@ io.on('connection', function(client) {
 	}
 	
 	function pass_on(data) {
-		games[data.game].ready_players.push(data.player);
-		client.broadcast(serialize("ready_player", data.player));
+		games[data.game].done_players.push(data.player);
+		client.broadcast(serialize("done_players", games[data.game].done_players));
 	}
 
 	function draw_line(data) {
