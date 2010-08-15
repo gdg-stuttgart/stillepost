@@ -93,7 +93,7 @@ io.on('connection', function(client) {
 		}
 	});
 
-	client.on('disconnect', function(){
+	client.on('disconnect', function() {
 //		client.broadcast(JSON.stringify({ announcement: client.sessionId + ' disconnected' }));
 	});
 	
@@ -101,6 +101,7 @@ io.on('connection', function(client) {
 		if (data.game.length > 0 && data.player.length > 0) {
 			console.log("Creating game: " + data.game);
 			games[data.game] = new Object();
+			games[data.game].ready_players = [];
 			games[data.game].players = new Object();
 			games[data.game].players[data.player] = create_player(data.game);
 			client.broadcast(serialize("game", game(data.game)));
@@ -115,8 +116,8 @@ io.on('connection', function(client) {
 	}
 	
 	function pass_on(data) {
-		//data.current_rank = ++(games[data.game].current_rank);
-		//client.broadcast(serialize("current_rank", data));
+		games[data.game].ready_players.push(data.player);
+		client.broadcast(serialize("ready_player", data.player));
 	}
 
 	function draw_line(data) {
