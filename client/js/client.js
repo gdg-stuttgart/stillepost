@@ -71,8 +71,33 @@ function message(obj){
   } else if (obj.type == "draw") {
 	  drawLine(obj.arguments.line);
   } else if (obj.type == "done_players") {
+	  console.log('globale games var:');
+	  console.log(games);
+	  // refresh done players
+	  games.arguments[game.name].done_players = obj.arguments;
+	  // get position of current player in list of all players
+	  current_player_position = 0;
+	  for(one_player in games.arguments[game.name].players){
+		  if(one_player == game.player){
+			  break;
+		  }
+		  current_player_position++;
+	  }
+	  console.log('current player position: ' + current_player_position);
+	  // get position of latest done player in list of all players
+	  current_player_done_position = 0;
+	  for(one_player in games.arguments[game.name].players){
+		  if(one_player == obj.arguments[obj.arguments.length-1]){
+			  break;
+		  }
+		  current_player_done_position++;
+	  }
+	  console.log('current done player position: ' + current_player_done_position);
+	  // enable pass on button if current player is after last done player in the players list
+	  if(current_player_done_position+1 == current_player_position){
+		  $('#pass_on_button')[0].disabled=false;
+	  }
 	  clear_canvas();
-	  games[game.name].done_players = obj.arguments;
   }
 }
 
@@ -201,7 +226,9 @@ function start_game(){
  */
 function pass_on(){
 	send('pass_on');
+	$('#pass_on_button')[0].disabled=true;
 	clear_canvas();
+	// disable pass on button for initiator
 	//switch_play_game();
 };
 
