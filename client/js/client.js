@@ -177,6 +177,13 @@ function join_game(){
 	$('#game_list_players').append('<li>'+player+'</li>');
 };
 
+function pass_on() {
+	var data = new Object();
+	data.game = game;
+	data.player = player;
+	send("pass_on", data);
+}
+
 function send(type, line) {
 	var json = new Object();
 	json.type = type;
@@ -189,18 +196,4 @@ function send(type, line) {
 	var ser = JSON.stringify(json);
 	console.log(ser);
 	socket.send(ser);
-}
-
-function pass_on() {
-	var data = new Object();
-	data.game = game;
-	data.player = player;
-	socket.send(serialize("pass_on", data));
-}
-
-function serialize(key, value) {
-	var data = new Object();
-	data.type = key;
-	data.arguments = value;
-	return JSON.stringify(data);
 }
