@@ -69,7 +69,9 @@ function message(obj){
   else if (obj.type == 'game_started') {
 	  alert('game started');
   } else if (obj.type == "draw") {
-	  drawLine(obj.arguments.line);
+	  var line = obj.arguments.line;
+	  drawLine(line);
+	  saveLine(line, obj.arguments.player);
   } else if (obj.type == "done_players") {
 	  clear_canvas();
 	  games[game.name].done_players = obj.arguments;

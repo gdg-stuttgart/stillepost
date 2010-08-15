@@ -60,7 +60,8 @@
         </fieldset>
   </article>
   <article class="hide" id="game">
-        <section class="left-big">
+        <section class="left-big" id="sectionCanvas">
+             <input type="button" name="submit" value="renderAll" onclick="showAll();return false"/>
         	<p>Game: <span id="lblGame"></span>, player: <span id="lblPlayer"></span></p>
                 <canvas id="canvas" onclick="this.style.cursor='crosshair';" >
                 </canvas>
