@@ -68,8 +68,8 @@ function message(obj){
 		// refresh done players
 		games.arguments[game.name].done_players = obj.arguments;
 		if (is_current_player(obj)) {
-			drawCanvas(canvas, tail(games.arguments[game.name].players));
-			setTimeout('clear_canvas()', 1500);
+			drawCanvas(canvas, obj.arguments[obj.arguments.length - 1]);
+			setTimeout('clear_canvas()', 2000);
 			$('#pass_on_button')[0].disabled=false;
 		}
 	}
