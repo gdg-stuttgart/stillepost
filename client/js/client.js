@@ -177,13 +177,6 @@ function join_game(){
 	$('#game_list_players').append('<li>'+player+'</li>');
 };
 
-function pass_on() {
-	var data = new Object();
-	data.game = game;
-	data.player = player;
-	send("pass_on", data);
-}
-
 function send(type, line) {
 	var json = new Object();
 	json.type = type;
