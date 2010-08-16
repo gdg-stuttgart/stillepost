@@ -100,7 +100,7 @@ io.on('connection', function(client) {
 	});
 	
 	function create_game(data) {
-		if (data.game.length > 0 && data.player.length > 0) {
+		if (data && data.game.length > 0 && data.player.length > 0) {
 			console.log("Creating game: " + data.game);
 			games[data.game] = new Object();
 			games[data.game].started = false;
@@ -112,7 +112,7 @@ io.on('connection', function(client) {
 	}
 
 	function join_game(data) {
-		if (data.game.length > 0 && data.player.length > 0) {
+		if (data && data.game.length > 0 && data.player.length > 0) {
 			if (!games[data.game].started) {
 				games[data.game].players[data.player] = create_player(data.game);
 				client.broadcast(serialize("game", game(data.game)));
@@ -121,7 +121,7 @@ io.on('connection', function(client) {
 	}
 	
 	function start_game(data) {
-		if (games[data.game].players.size() > 1) {
+		if (data && games[data.game] && games[data.game].players.size() > 1) {
 			games[data.game].started = true;
 			client.broadcast(serialize("game_started", data.game));
 		}
