@@ -121,7 +121,7 @@ io.on('connection', function(client) {
 	}
 	
 	function start_game(data) {
-		if (data && games[data.game].players.size() > 1) {
+		if (data && games[data.game] && games[data.game].players.size() > 1) {
 			games[data.game].started = true;
 			client.broadcast(serialize("game_started", data.game));
 		}
