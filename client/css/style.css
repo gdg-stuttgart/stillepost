@@ -77,6 +77,14 @@ article {
 	margin-right: auto;
 }
 
+article#game {
+	width: 784px;
+}
+
+article#game section.left-big {
+	width: 610px;
+}
+
 hr {
 	background-image: url('../img/hr.png');
 	width: 674px;
