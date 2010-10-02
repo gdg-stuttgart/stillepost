@@ -1,78 +1,117 @@
 <!DOCTYPE html>
 <html>
-  <head>
-  <link href="css/style.css" rel="stylesheet" />
-  <script src="js/socket.io.js" type="text/javascript"></script>
-  <script src="js/canvas.js" type="text/javascript"></script>
-  <script src="js/jquery-1.4.2.min.js" type="text/javascript"></script>
-  <script src="js/client.js" type="text/javascript"></script>
+<head>
+	<meta charset="utf-8">
+	<link href="css/style.css" rel="stylesheet" />
+	<script src="js/socket.io.js" type="text/javascript"></script>
+	<script src="js/canvas.js" type="text/javascript"></script>
+	<script src="js/jquery-1.4.2.min.js" type="text/javascript"></script>
+	<script src="js/client.js" type="text/javascript"></script>
     <title>stillepost</title>
-  </head>
-  <body>
-  	<header><h1>Stillepost</h1></header>
-  <article id="options_game" class="color">
-    <section>
-      <p>Description</p>
-    </section>
-    <section>
-    	<form>
-    	<fieldset>
-    	<legend>options</legend>
-    	<input type="button" name="option" value="init game" onclick="switch_init_game(); return false" />
-    	<input type="button" name="option" value="join game" onclick="switch_join_game(); return false" />
-    	</fieldset>
-    	</form>
-    </section>
-  </article>
-  <article class="hide" id="join">
-    <section>
-        <section class="left">
-        <select size="15" id="join_list_games" onchange="join_display_players(this)">	<!--Liste aller Spiele-->
-        </select>
-        </section>
-        <section class="rigth">
-        <ul id="join_list_players">			<!--Liste der Spieler im Spiel-->
-        </ul>
-        </section>
-        <section class="buttom">
-	 <style> :invalid { background-color: red; } </style>
-        <label for="join_player" class="small">Your name:</label> <input type="required" id="join_player" name="join_player" onkeyup="doenabled(this.value, 'join_join')" />
-        <input id="join_join" type="button" value="join game" name="submit" onclick="join_game();switch_play_game();return false" disabled="disabled" >
-        </section>
-    </section>
-  </article>
-  <article class="hide" id="init">
-    <section class="left">
-        <fieldset>
-        <legend>register</legend>
-	<style> :invalid { background-color: red; } </style>
-        <label for="init_new_game" class="small">game name:</label> <input type="required" name="init_new_game" id="init_new_game" onkeyup="doenabled(this.value, 'init_player')" /><br />
-        <label for="init_player" class="small">your name:</label> <input type="required" name="init_player" id="init_player" onkeyup="doenabled(this.value, 'init_register')" disabled="disabled"/><br />
-        <input type="button" name="submit" value="register" id="init_register" onclick="create_game();return false" disabled="disabled" />
-        </fieldset>
-    </section>
+</head>
+<body>
+<header>
+	<h1>Stillepost</h1>
+	<span class="sub"><span class="sub1">zum</span><br /><span class="sub2">malen</span></span>
+	<p class="center clear"><em>English: Chinese Whisperer by drawing</em></p>
+	<hr />
+</header>
+<article id="options_game">
+    <section class="center">
+  		<button name="option" value="init game" onclick="switch_init_game(); return false" class="margin_right"><img src="img/new_game.png" alt="init game" /><br />Init Game!</button>
+		<button name="option" value="join game" onclick="switch_join_game(); return false" class="margin_left"><img src="img/join_game.png" alt="join game" /><br />Join Game!</button>
+	</section>
+	<section>
+   	<h2>Spielidee</h2>
+	<p>Jeder kennt das Spiel Stille Post, bei dem Nachrichten von Spieler zu
+	Spieler weitergeflüstert werden und am Ende eine komplett andere
+	Nachricht herauskommt. &bdquo;Stillepost zum Malen&ldquo; ist eine
+	spaßige Variante des Spieles, bei welchem das schnelle Erfassen von
+	Bildern und anschließende Nachzeichnen gefordert wird.</p>
+	<h2>Spielanleitung</h2>
+	<h3>Spielvorbereitung</h3>
+	<p>Spieler 1 eröffnet ein neues Spiel durch Klick auf den Button "Init
+	Game". Daraufhin kann er einen Spielnamen und seinen Spielernamen
+	festlegen und das Spiel mit Klick auf "Init Game" eröffnen.</p>
+	<p>Nun können weitere Mitspieler dem Spiel beitreten. Dazu klicken
+	sie auf den Button "Join Game!" und wählen anschließend das eben von
+	Spieler 1 eröffnete Spiel aus und geben ihren Spielernamen an.</p>
+	<p>Wenn alle Mitspieler dem Spiel beigetreten sind, kann Spieler 1
+	auf "Start Game!" klicken und damit das Spiel beginnen. Alle Mitspieler
+	bekommen jetzt die Nachricht "Game started" eingeblendet und sehen immer
+	wer gerade malt.</p>
+	<h3>Spielverlauf</h3>
+	<p>Spieler 1 denkt sich ein Bild aus und zeichnet es mit
+	der Maus auf die Zeichenfläche. Wenn er fertig ist, muss er auf "Pass
+	on!" drücken um sein Bild an den nächsten Spieler zu übergeben. Dieser
+	bekommt das Bild nun für zwei Sekunden einglendet und muss es danach
+	nachmalen. Wenn Spieler 2 fertig ist, muss auch dieser auf den Button "Pass on!"
+	drücken um sein Bild an Spieler 3 weiterzugeben. Das ganze passiert so lange,
+	bis jeder Spieler das Bild des Vorgängers nachgemalt hat. Am Ende sehen
+	alle Spieler wie sich das Bild im Laufe der Zeit verändert hat.</p>
+	</section>
+</article>
+<article class="hide" id="join">
+	<section class="left">
+		<h2>Select a Game:</h2>
+		<label for="join_list_games" style="height: 210px;">Open Games:
+		<select size="15" id="join_list_games"
+			onchange="join_display_players(this)" class="right">
+			<!--Liste aller Spiele-->
+		</select> </label>
+		<label for="join_player">Your name: <input type="required"
+			id="join_player" name="join_player"
+			onkeyup="doenabled(this.value, 'join_join')" class="right" /> </label>
+		<label><input id="join_join" type="button" value="Join Game!"
+			name="submit" onclick="join_game();switch_play_game();return false"
+			disabled="disabled" class="right" /> </label>
+	</section>
+	<section class="right">
+		<h2>Teammates:</h2>
+		<ul id="join_list_players"><!--Liste der Spieler im Spiel--></ul>
+	</section>
+</article>
+<article class="hide" id="init">
+	<section class="left">
+		<h2>Init Game</h2>
+		<label for="init_new_game">Game Name: <input
+			type="required" name="init_new_game" id="init_new_game"
+			onkeyup="doenabled(this.value, 'init_player')" class="right" /></label><br />
+		<label for="init_player">Player Name: <input
+			type="required" name="init_player" id="init_player"
+			onkeyup="doenabled(this.value, 'init_register')" class="right"
+			disabled="disabled" /></label><br />
+		<label class="center"><input type="button" name="submit"
+			value="Init Game!" id="init_register"
+			onclick="create_game();return false" disabled="disabled" class="right" /></label>
+	</section>
     <section class="right">
-        <fieldset>
-        <legend>player list</legend>
+        <h2>Player List</h2>
         <ul id="init_list_players">
-                <li>you</li>
+        	<li>you</li>
         </ul>
-        <input type="button" name="submit" value="start game" onclick="start_game(); return false" />
-        </fieldset>
-  </article>
-  <article class="hide" id="game">
-        <section class="left-big" id="sectionCanvas">
-        	<p>Game: <span id="lblGame"></span>, player: <span id="lblPlayer"></span></p>
-                <canvas class="hide" id="canvas" onclick="this.style.cursor='crosshair';" >
-                </canvas>
-                <span id="game_canvas_replacement">Game not yet started.</span>
-        </section>
-        <section class="right-small">
-                <ul id="game_list_players">
-                        <li>players</li>
-                </ul>
-                <input type="submit" id="pass_on_button" value="pass on" name="submit" disabled="disabled" onclick="pass_on(); return false" />
-  </article>
-  <footer>GTUG Campout Project</footer>
-  </body>
+        <input type="button" name="submit" value="Start Game!" onclick="start_game(); return false" />
+    </section>
+</article>
+<article class="hide" id="game">
+	<section class="left-big" id="sectionCanvas">
+		<h2>Canvas:</h2>
+		<p>Game: <span id="lblGame"></span>, Player: <span id="lblPlayer"></span></p>
+		<canvas class="hide" id="canvas" onclick="this.style.cursor='crosshair';" ></canvas>
+		<span id="game_canvas_replacement">Game not yet started.</span>
+	</section>
+	<section class="right-small">
+		<h2>Teammates:</h2>
+		<ul id="game_list_players">
+           	<li>Players</li>
+		</ul>
+		<input type="submit" id="pass_on_button" value="pass on" name="submit" disabled="disabled" onclick="pass_on(); return false" />
+	</section>
+</article>
+<footer>
+  	<hr />
+  	<span class="left">GTUG Campout Project</span>
+  	<span class="right"><a href="">Impressum</a> | <a href="">Kontakt</a> | <a href="">Links</a></span>
+</footer>
+</body>
 </html>
