@@ -32,30 +32,21 @@ function message(obj){
 				$('#init_list_players').append($('<li></li>').text(my_players));
 			}
 		}
-		// refresh games list
-		$('#join_list_games').html('');
-		for(my_game in games.arguments) {
-		    if (!games.arguments[my_game].started) {
-			    console.log('add new game: ' + my_game);
-			    $('#join_list_games').append($('<option></option>').text(my_game));
-			}
-		}
+		refresh_games_list();
 	}
 	//add all games to select list
 	else if (obj.type == 'games_list') {
 		// copy games list
 		games = obj;
-		for(key in obj.arguments){
-			console.log('add game:' + key);
-			$('#join_list_games').append($('<option></option>').val(key).html(key));
-		}
+		
+		refresh_games_list();
   		if ($('#join_list_games').length > 0) {
 			$("#join_list_games option:first").attr('selected','selected');
 		}
 	}
-	// alert players that game started
 	else if (obj.type == 'game_started') {
 	    if (game.name) {
+	        // alert players that game started 
 	        alert('game started');
     	    games.arguments[game.name].started=true;
     		for (player in games.arguments[game.name].players) {
@@ -96,6 +87,16 @@ function message(obj){
 			updateCurrentPlayer();
 		}
 		 
+	}
+}
+
+function refresh_games_list() {
+	$('#join_list_games').html('');
+	for(my_game in games.arguments) {
+	    if (!games.arguments[my_game].started && games.arguments[my_game].timestamp > new Date().getTime() - 3600000) {
+		    console.log('add new game: ' + my_game);
+		    $('#join_list_games').append($('<option></option>').text(my_game));
+		}
 	}
 }
 

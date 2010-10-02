@@ -104,6 +104,7 @@ io.on('connection', function(client) {
 			console.log("Creating game: " + data.game);
 			games[data.game] = new Object();
 			games[data.game].started = false;
+			games[data.game].timestamp = new Date().getTime();
 			games[data.game].done_players = [];
 			games[data.game].players = new Object();
 			games[data.game].players[data.player] = create_player(data.game);
