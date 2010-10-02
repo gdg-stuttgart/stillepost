@@ -88,7 +88,6 @@ var games = new Object(),
 		
 io.on('connection', function(client) {
 	client.send(serialize("games_list", games));
-//	client.broadcast(JSON.stringify({ announcement: client.sessionId + ' connected' }));
 
 	client.on('message', function(message) {
 		console.log("Dispatching: " + message);
@@ -108,13 +107,21 @@ io.on('connection', function(client) {
 	});
 
 	client.on('disconnect', function() {
-//		client.broadcast(JSON.stringify({ announcement: client.sessionId + ' disconnected' }));
+		for (var gameName in games) {
+			game = games[gameName];
+			if (game.owner == client.sessionId) {
+				console.log("Owner left, purging game " + gameName);
+				delete games[gameName];
+				console.log(games[gameName] === undefined);
+			}
+		};
 	});
 	
 	function create_game(data) {
 		if (data && data.game.length > 0 && data.player.length > 0) {
 			console.log("Creating game: " + data.game);
 			games[data.game] = new Object();
+			games[data.game].owner = client.sessionId;
 			games[data.game].started = false;
 			games[data.game].timestamp = new Date().getTime();
 			games[data.game].done_players = [];
@@ -125,7 +132,7 @@ io.on('connection', function(client) {
 	}
 
 	function join_game(data) {
-		if (data && data.game.length > 0 && data.player.length > 0) {
+		if (data && data.game.length > 0 && games[data.game] !== undefined && data.player.length > 0) {
 			if (!games[data.game].started) {
 				games[data.game].players[data.player] = create_player(data.game);
 				client.broadcast(serialize("game", game(data.game)));
@@ -134,15 +141,22 @@ io.on('connection', function(client) {
 	}
 	
 	function start_game(data) {
-		if (data && games[data.game] && games[data.game].players.size() > 1) {
+		if (data && games[data.game] !== undefined && games[data.game].players.size() > 1) {
 			games[data.game].started = true;
 			client.broadcast(serialize("game_started", data.game));
 		}
 	}
 	
 	function pass_on(data) {
-		games[data.game].done_players.push(data.player);
-		client.broadcast(serialize("done_players", games[data.game].done_players));
+		if (games[data.game] !== undefined) {
+			var game = games[data.game];
+			game.done_players.push(data.player);
+			client.broadcast(serialize("done_players", game.done_players));
+			if (game.done_players.length == game.players.size()) {
+				console.log("Game over for " + data.game);
+				delete games[data.game];	
+			}
+		}
 	}
 
 	function draw_line(data) {
