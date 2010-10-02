@@ -27,17 +27,18 @@ function message(obj){
 		// rebuild player lists
 		for(my_game in obj.arguments){
 			for(my_players in obj.arguments[my_game].players){
-				console.log('add new player');
-				console.log(my_players);
+				console.log('add new player: ' + my_players);
 				$('#game_list_players').append($('<li></li>').text(my_players));
 				$('#init_list_players').append($('<li></li>').text(my_players));
 			}
 		}
 		// refresh games list
 		$('#join_list_games').html('');
-		for(my_game in games.arguments){
-			console.log('add new game: ' + my_game);
-			$('#join_list_games').append($('<option></option>').text(my_game));
+		for(my_game in games.arguments) {
+		    if (!games.arguments[my_game].started) {
+			    console.log('add new game: ' + my_game);
+			    $('#join_list_games').append($('<option></option>').text(my_game));
+			}
 		}
 	}
 	//add all games to select list
@@ -54,12 +55,17 @@ function message(obj){
 	}
 	// alert players that game started
 	else if (obj.type == 'game_started') {
-		alert('game started');
-		games.arguments[game.name].started=true;
-		for (player in games.arguments[game.name].players) {
-			updateCurrentPlayer(player);
-			break;
-		}
+	    if (game.name) {
+	        alert('game started');
+    	    games.arguments[game.name].started=true;
+    		for (player in games.arguments[game.name].players) {
+    			updateCurrentPlayer(player);
+    			break;
+	    	}
+	    } else {
+            games.arguments = $.grep(games.arguments, function(val) { return val != obj.arguments; });
+	    }
+	    $("#join_list_games option[value='" + game + "']").remove();
 	} else if (obj.type == "draw") {
 		var line = obj.arguments.line;
 		drawLine(line);
