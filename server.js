@@ -43,6 +43,18 @@ server = http.createServer(function(req, res){
 				contentType = 'text/css';
 				encoding = 'utf8';
 			}
+			if (/\.(eot)$/.test(path)){
+				contentType = 'application/vnd.ms-fontobject';
+				encoding = 'binary';
+			}
+			if (/\.(ttf)$/.test(path)){
+				contentType = 'font/ttf';
+				encoding = 'binary';
+			}
+			if (/\.(woff)$/.test(path)){
+				contentType = 'application/x-woff';
+				encoding = 'binary';
+			}
 			if(contentType != null && encoding != null) {
 				try {
 					res.writeHead(200, {'Content-Type':contentType});
