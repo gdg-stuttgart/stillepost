@@ -67,7 +67,7 @@ Object.prototype.size = function () {
   return len;
 }
 
-server.listen(8080);
+server.listen(6060);
 		
 // socket.io, I choose you
 // simplest chat application evar

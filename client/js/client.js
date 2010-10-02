@@ -104,7 +104,7 @@ function updateCurrentPlayer(player) {
 }
 
 // open socket
-var socket = new io.Socket(null, {port: 8080});
+var socket = new io.Socket(null, {port: 6060});
 var con = socket.connect();
 var game = new Object();
 
