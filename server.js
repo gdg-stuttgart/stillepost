@@ -76,13 +76,6 @@ server = http.createServer(function(req, res){
 	}
 });
 
-//Object.prototype.size = function () {
-//  var len = this.length ? --this.length : -1;
-//    for (var k in this)
-//      len++;
-//  return len;
-//};
-
 if (typeof Object.create !== 'function') {
 	Object.create = function (o) {
 		var F = function() {};
@@ -351,7 +344,7 @@ io.on('connection', function(client) {
 		var game = app.create_game(client.sessionId, data.name);
 		console.log("players: " + game.players.join(","));
 		client.player.send("UPDATE", ["game"], game.client_info());
-		app.send("ADD", ["game_list"], game.name);
+		app.send("UPDATE", ["games_list"], app.game_labels);
 	}
 	
 	function update_profile(data) {
