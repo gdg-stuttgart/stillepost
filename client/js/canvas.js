@@ -1,6 +1,5 @@
 var canvas = null;
 var lastMousePosition= null;
-var drawHistory = new Object();
 
 var canvasRegistrationFn = function() {
 	canvas = document.getElementById('canvas');
@@ -30,8 +29,7 @@ var canvasOnMouseMove = function(e) {
 	line = [lastMousePosition, current];
 	lastMousePosition = current;
 	drawLine(line);
-	saveLine(line);
-	send("draw", line);
+	send_neu("draw", line);
 };
 
 var canvasOnMouseUp = function(e) {
@@ -63,25 +61,18 @@ function clear_canvas() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function saveLine(line, player) {
-	if (player == null) {
-		player = game.player;
-	}
-	getHistory(player).push(line);
-}
-
 function getHistory(player) {
-	var result = drawHistory[player] ;
+	var result = app.game.draw_history[player] ;
 	if (result == null) {
-		result = new Array();
-		drawHistory[player] = result;
+		result = [];
+		app.game.draw_history[player] = result;
 	}
 	return result;
 }
 
 function showAll() {
 	$('#canvas')[0].className='hide';
-	for (player in drawHistory) {
+	for (player in app.game.draw_history) {
 		drawCanvas(createCanvas(player), player);
 	}
 }

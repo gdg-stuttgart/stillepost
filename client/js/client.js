@@ -1,120 +1,148 @@
-var games = new Array();
+
+var app = {
+    sessionId: undefined, // will be set from the server after connecting
+	game: { 
+	  players: [] // the id's of players participating in the game, details are in app.players
+	},
+	players: new Object(), // all players currently online by sessionId
+	games_list: [],
+	me: function() {
+	  return this.players[this.sessionId];
+    },
+    current: function() {
+    	return this.players[this.game.current];
+    },
+    am_i_current: function() {
+    	return this.game.current == this.me().sessionId;
+    },
+    previous_user: function() {
+    	return this.game.players[this.game.players.indexOf(this.game.current) -1];
+    }
+};
 
 // setup socket
 io.setPath('/js/');
 
+
+function isMessage(message, type, property) {
+	return message.type == type && message.property.indexOf(property) != -1;
+}
+
+
+function update_model(message) {
+	var targetObject = app;
+	var i ;
+	var property_chain = message.property;
+	console.log('updating model:' + property_chain.join("."));
+	for (i = 0 ; i < property_chain.length - 1; i++) {
+		targetObject = targetObject[property_chain[i]];
+	};
+	var targetProperty = property_chain[property_chain.length -1];
+	console.log(" ... target: " + targetObject + ", property " + targetProperty);
+	if (message.type == "ADD") {
+		if (targetObject[targetProperty] === undefined) {
+			targetObject[targetProperty]  = [];
+		}
+		targetObject[targetProperty].push(message.value);
+	} else {
+		targetObject[targetProperty] = message.value;
+	}
+}
+
+
 /**
- * eval incoming messages
+ * dispatch incoming messages
  * 
  * @param JSON parsed message from server 
  */
 function message(obj){
 	console.log(obj);
-	if ('message' in obj) {
-		// add new player to player list
-		$('#init_list_players').append($('<li></li>').text(obj.message[0]));
-	}
-	// add new games and players to list
-	else if (obj.type == 'game'){
-		// add to games list
-		for(my_game in obj.arguments){
-			games.arguments[my_game] = obj.arguments[my_game];  
-		}
-		console.log('add new players');
-		// clear player lists
-		$('#game_list_players').html('');
-		$('#init_list_players').html('');
-		// rebuild player lists
-		for(my_game in obj.arguments){
-			for(my_players in obj.arguments[my_game].players){
-				console.log('add new player: ' + my_players);
-				$('#game_list_players').append($('<li></li>').text(my_players));
-				$('#init_list_players').append($('<li></li>').text(my_players));
-			}
-		}
+	update_model(obj);
+    if (isMessage(obj, "UPDATE", "players")) {
+		refresh_players();
+	} if (isMessage(obj, "UPDATE", "games_list")) {
 		refresh_games_list();
-	}
-	//add all games to select list
-	else if (obj.type == 'games_list') {
-		// copy games list
-		games = obj;
-		
-		refresh_games_list();
-  		if ($('#join_list_games').length > 0) {
-			$("#join_list_games option:first").attr('selected','selected');
-		}
-	}
-	else if (obj.type == 'game_started') {
-	    if (game.name) {
-	        // alert players that game started 
-	        alert('game started');
-    	    games.arguments[game.name].started=true;
-    		for (player in games.arguments[game.name].players) {
-    			updateCurrentPlayer(player);
-    			break;
-	    	}
-	    } else {
-            games.arguments = $.grep(games.arguments, function(val) { return val != obj.arguments; });
-	    }
-	    $("#join_list_games option[value='" + game + "']").remove();
-	} else if (obj.type == "draw") {
-		var line = obj.arguments.line;
-		drawLine(line);
-		saveLine(line, obj.arguments.player);
-	} else if (obj.type == "done_players") {
-		console.log('current drawer: ');
-		console.log(get_current_drawer(obj));
-		clear_canvas();
-		console.log('globale games var:');
-		console.log(games);
-		// refresh done players
-		games.arguments[game.name].done_players = obj.arguments;
-		// show history if last player is done
-		var player_size = 0;
-		for (var k in games.arguments[game.name].players){
-			player_size++;
-		}
-		if(games.arguments[game.name].done_players.length == player_size){
+	} if (isMessage(obj, "UPDATE", "game")) {
+		refresh_game();
+	} if (isMessage(obj, "UPDATE", "state")) {
+		if (app.game.state == "FINISHED") {
 			showAll();
+		} else if (app.game.state == "RUNNING") {
+	        alert('Game '+app.game.name+' started');
 		}
-		if (is_current_player(obj)) {
-			drawCanvas(canvas, obj.arguments[obj.arguments.length - 1]);
-			setTimeout('clear_canvas()', 2000);
-			$('#pass_on_button')[0].disabled=false;
-			show_canvas();
-		}
-		else {
-			updateCurrentPlayer();
-		}
-		 
+	} if (isMessage(obj, "UPDATE", "current")) {
+		user_changed();
+	}  
+}
+
+function refresh_players() {
+	// TODO: reactive init_list
+	$('#init_list_players').html('');
+	var i;
+	for (player_id in app.players){
+		console.log('add new player: ' + player_id);
+		//$('#init_list_players').append($('<li></li>').text(player_id));
+	}
+	
+	$('#game_list_players').html('');
+	for (i = 0;i<app.game.players.length;i++){
+		var playerid = app.game.players[i];
+		var player = app.players[playerid];
+		console.log('add new player in game: ' + playerid);
+		$('#init_list_players').append($('<li></li>').text(player.name));
+		$('#game_list_players').append($('<li id='+player.sessionId+'></li>').text(player.name));
 	}
 }
 
 function refresh_games_list() {
 	$('#join_list_games').html('');
-	for(my_game in games.arguments) {
-	    if (!games.arguments[my_game].started && games.arguments[my_game].timestamp > new Date().getTime() - 3600000) {
-		    console.log('add new game: ' + my_game);
-		    $('#join_list_games').append($('<option></option>').text(my_game));
+	var i;
+	for (i=0; i < app.games_list.length; i++) {
+		var name = app.games_list[i];
+	    console.log('add new game: ' + name);
+	    $('#join_list_games').append($('<option></option>').text(name));
+	};
+	if ($('#join_list_games').length > 0) {
+		$("#join_list_games option:first").attr('selected','selected');
+	};
+}
+
+function refresh_game() {
+	$('#lblGame').html('');
+	$('#lblGame').append(document.createTextNode(app.game.name));
+	$('#lblPlayer').html('');
+	$('#lblPlayer').append(document.createTextNode(app.me().name));
+}
+
+function user_changed() {
+	var name;
+	if (app.current() == undefined) {
+		// game over
+		name = "nobody";
+	} else {
+		name = app.current().name;
+	}
+	document.getElementById("game_canvas_replacement").firstChild.nodeValue = "Currently drawing: " + name;
+	$('#pass_on_button')[0].disabled=!app.am_i_current();
+	if (app.am_i_current()) {
+		var previous = app.previous_user();
+		if (previous !== undefined) {
+			drawCanvas(canvas, app.previous_user());
+			setTimeout('clear_canvas()', 2000);
 		}
+		show_canvas();
+	}
+	// mark active user
+	$("#game_list_players > li").attr("class", null);
+	if (app.current() != undefined) {
+		$("#"+app.current().sessionId).addClass("currentUser");
 	}
 }
 
-function updateCurrentPlayer(player) {
-	document.getElementById("game_canvas_replacement").firstChild.nodeValue = "Currently drawing: " + player;
-}
 
 // open socket
 var socket = new io.Socket(null, {port: 6060});
 var con = socket.connect();
-var game = new Object();
-
-function setGame(gameName, player) {
-	game.player = player;
-	game.name = gameName;
-	$('#lblGame').append(document.createTextNode(gameName));
-	$('#lblPlayer').append(document.createTextNode(player));
-}
 
 // call message function when receiving new data through socket
 socket.on('message', function(data){
@@ -123,7 +151,7 @@ socket.on('message', function(data){
 		return;
 	}
 	var obj = JSON.parse(data);
-	console.log("Received "+obj.type+"-event from " + obj.arguments.player + ", plain: "+data);
+	//console.log("Received "+obj.type+"-event from " + obj.arguments.player + ", plain: "+data);
 	message(obj);
 }); 
 
@@ -156,19 +184,13 @@ function switch_play_game() {
  * @param selectElement
  */
 function join_display_players(selectElement){
-	console.log('join_display_players');
-	// game name
-	var key = selectElement.options[selectElement.selectedIndex].text;
-	// clear players list
-	$('#join_list_players').html('');
-	// add players of selected game
-	console.log(games);
-	console.log(key);
-	for(player in games.arguments[key].players){
-		var li = document.createElement('li');
-		li.innerHTML = player;
-		document.getElementById('join_list_players').appendChild(li);
-	}
+	// TODO: broken throuhg model refactoring, clients do not have all
+	// the information anymore.
+}
+
+function update_profile() {
+	var name = document.getElementById('join_player').value;
+	send_neu("update_profile", { "property" : "name", "value": name});
 }
 
 /**
@@ -176,22 +198,11 @@ function join_display_players(selectElement){
  */
 function create_game(){
 	var name = document.getElementById('init_new_game').value;
-	var player = document.getElementById('init_player').value;
-	setGame(name, player);
-	send("create_game");
+	send_neu("create_game", {"name":name});
 	document.getElementById('init_new_game').disabled=true;
-	document.getElementById('init_player').disabled=true;
 	document.getElementById('init_register').disabled=true;
-	var li = document.createElement('li');
-	// TODO: is this still needed?
-	li.innerHTML = player;
-	document.getElementById('init_list_players').removeChild(document.getElementById('init_list_players').childNodes[1]);
-	document.getElementById('init_list_players').appendChild(li);
-	// clear player list
 	$('#game_list_players').html('');
-	// add yourself to player list
-	console.log('add new player');
-	$('#game_list_players').append('<li>'+player+'</li>');
+	$('#init_list_players').html('');
 }
 
 /**
@@ -199,32 +210,17 @@ function create_game(){
  */
 function join_game(){
 	var name = document.getElementById('join_list_games').value;
-	var player = document.getElementById('join_player').value;
-	setGame(name, player);
-	send("join_game");
-	// clear player list
+	send_neu("join_game", {"name":name});
+	// clear player list, will be updated from a server message later
 	$('#game_list_players').html('');
-	// rebuild player list
-	for(my_players in games.arguments[name].players){
-		$('#game_list_players').append('<li>'+my_players+'</li>');
-	}
-	// add yourself to player list
-	$('#game_list_players').append('<li>'+player+'</li>');
-	// add yourself to player object
-	games.arguments[game.name].players[player] = new Object();
-	games.arguments[game.name].players[player].picture = new Array();
 };
 
 /**
  * initiator starts the game and switches to canvas view
  */
 function start_game(){
-	send('start_game');
+	send_neu('start_game');
 	switch_play_game();
-	games.arguments[game.name].started=true;
-	// enable pass on button for initiator
-	$('#pass_on_button')[0].disabled=false;
-	show_canvas();
 };
 
 function show_canvas() {
@@ -237,81 +233,23 @@ function show_canvas() {
  */
 function pass_on(){
 	// send via websocket
-	send('pass_on');
+	send_neu('pass_on');
 	// disable pass on button for player
-	$('#pass_on_button')[0].disabled=true;
+	//$('#pass_on_button')[0].disabled=true;
 	// clear own canvas
 	clear_canvas();
-	// add yourself to done player object
-	games.arguments[game.name].done_players.push(game.player);
-	// get size of players object
-	var player_size = 0;
-	for (var k in games.arguments[game.name].players){
-		player_size++;
-	}
-	// show history if last player is done
-	if(games.arguments[game.name].done_players.length == player_size){
-		showAll();
-	}
 };
 
-function is_current_player(obj) {
-	// get position of current player in list of all players
-	current_player_position = 0;
-	for(one_player in games.arguments[game.name].players){
-		if(one_player == game.player){
-			break;
-		}
-		current_player_position++;
-	}
-	console.log('current player position: ' + current_player_position);
-	// get position of latest done player in list of all players
-	current_player_done_position = 0;
-	for(one_player in games.arguments[game.name].players){
-		if(one_player == obj.arguments[obj.arguments.length-1]){
-			break;
-		}
-		current_player_done_position++;
-	}
-	console.log('current done player position: ' + current_player_done_position);
-	// enable pass on button if current player is after last done player in the players list
-	if(current_player_done_position+1 == current_player_position){
-		return true;
-	} else {
-		return false;
-	}
-}
 
-/**
- * returns the current drawer
- * @param done_players
- * @returns
- */
-function get_current_drawer(done_players){
-	var stop_next = false;
-	for(one_player in games.arguments[game.name].players){
-		if(stop_next){
-			return one_player;
-		}
-		if(one_player == done_players.arguments[done_players.arguments.length-1]){
-			stop_next = true;
-		}
-	}
-}
-
-function send(type, line) {
+function send_neu(type, arguments) {
 	var json = new Object();
 	json.type = type;
-	json.arguments = new Object();
-	json.arguments.game = game.name;
-	json.arguments.player = game.player;
-	if (line != null) {
-		json.arguments.line = line;
-	}
+	json.arguments = arguments;
 	var ser = JSON.stringify(json);
-	console.log(ser);
+	console.log("Sending: " + ser);
 	socket.send(ser);
 }
+
 
 function doenabled(text, idid) {
 	if (text.length > 0)
@@ -319,11 +257,3 @@ function doenabled(text, idid) {
 	else
 		document.getElementById(idid).disabled = true;
   }
-  
-function tail(hash) {
-	var current_player = null;
-	for (player in hash) {
-		current_player = player;
-	}
-	return current_player;
-}
