@@ -172,3 +172,12 @@ canvas {
 .currentUser {
 	background-color: #f2f1f3;
 }
+
+.hovering {
+	background-color: #f2f1f3;
+}
+
+#userpicture {
+	height: 50px;
+	width: 50px;
+}

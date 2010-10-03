@@ -67,7 +67,7 @@ function message(obj){
 	} if (isMessage(obj, "UPDATE", "state")) {
 		if (app.game.state == "FINISHED") {
 			showAll();
-		} else if (app.game.state == "RUNNING") {
+		} else if (app.game.state == "RUNNING" && app.sessionId != app.game.players[0]) {
 	        alert('Game '+app.game.name+' started');
 		}
 	} if (isMessage(obj, "UPDATE", "current")) {
@@ -90,8 +90,32 @@ function refresh_players() {
 		var player = app.players[playerid];
 		console.log('add new player in game: ' + playerid);
 		$('#init_list_players').append($('<li></li>').text(player.name));
-		$('#game_list_players').append($('<li id='+player.sessionId+'></li>').text(player.name));
+		var li = $('<li id='+player.sessionId+'></li>');
+		
+		append_player_picture(li, player);
+		li.append("<span>"+player.name+"</span>");
+		$('#game_list_players').append(li);
 	}
+}
+
+var onImgLoad = function(ctx, img_buffer) { return function() {ctx.drawImage(img_buffer,0,0,50,50);}; };
+
+function append_player_picture(parent, player) {
+	if (player.url == undefined) {
+		return;
+	};
+	var cEl = document.createElement('canvas');
+	cEl.width = 50;
+	cEl.height = 50;
+	cEl.id = "userpicture";
+	var ctx = cEl.getContext('2d');
+	var img_buffer = document.createElement('img');
+	img_buffer.src = player.url;
+	img_buffer.style.display = 'none';
+	document.body.appendChild(img_buffer); // this line only needed in safari
+	
+	img_buffer.onload = onImgLoad(ctx, img_buffer);
+	parent.append(cEl);
 }
 
 function refresh_games_list() {
@@ -257,3 +281,4 @@ function doenabled(text, idid) {
 	else
 		document.getElementById(idid).disabled = true;
   }
+

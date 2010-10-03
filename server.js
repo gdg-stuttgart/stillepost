@@ -39,6 +39,10 @@ server = http.createServer(function(req, res){
 				contentType = 'image/png';
 				encoding = 'binary';
 			} else
+			if (/\.(jpg)$/.test(path)){
+				contentType = 'image/jpg';
+				encoding = 'binary';
+			} else
 			if (/\.(css)$/.test(path)){
 				contentType = 'text/css';
 				encoding = 'utf8';
@@ -101,7 +105,7 @@ server.listen(6060);
 //  i.e. changes of the game object as well as draw-events
 var player_prototyp = {
 	name: 'anonymous',
-	url: 'default_player.png',
+	url: 'img/default_player.jpg',
 	sessionId: 'TBD', // mandatoryâ
 	send: function(type, property, data) {
 	    var message = create_json(type, property, data);

@@ -17,6 +17,47 @@
 	<hr />
 </header>
 <article id="options_game">
+	<section id="player_profile">
+		<label for="join_player">Your name: <input type="required"
+			id="join_player" name="join_player"
+			onchange="update_profile()" /> </label>
+		<label for="picture_drop">Your picture: <div id="picture_drop">Drop here</div></label>	
+		<script>
+		var dropZone = document.getElementById('picture_drop');
+		dropZone.addEventListener('dragenter', function(event) {
+		    if (event.preventDefault) event.preventDefault();
+		    event.dataTransfer.dropEffect = 'copy';
+		    this.className = 'hovering';
+		    return false;
+		  }, false);
+		dropZone.addEventListener('dragover', function(event) {
+		    if (event.preventDefault) event.preventDefault(); // allows us to drop
+		    event.dataTransfer.dropEffect = 'copy';
+		    return false;
+		  }, false);
+		dropZone.addEventListener('dragleave', function(event) {
+		    if (event.preventDefault) event.preventDefault(); // allows us to drop
+		    this.className = '';
+		    return false;
+		  }, false);
+		dropZone.addEventListener('drop', function(event) {
+		    if (event.preventDefault) event.preventDefault();
+		    var types = event.dataTransfer.types;
+		    
+		    for (var i = 0; i < types.length; i++) {
+		      if (types[i] == 'text/uri-list') {
+		    	  this.innerHTML = '';  
+		        var imgPassed = event.dataTransfer.getData('text/uri-list');
+		        append_player_picture($('#picture_drop'), { url: imgPassed});
+		        send_neu("update_profile", { "property" : "url", "value": imgPassed});
+		      }
+		    }
+		    return false;
+		  }, false);
+				
+		</script>
+	</section>
+
     <section class="center">
   		<button name="option" value="init game" onclick="switch_init_game(); return false" class="margin_right"><img src="img/new_game.png" alt="init game" /><br />Init Game!</button>
 		<button name="option" value="join game" onclick="switch_join_game(); return false" class="margin_left"><img src="img/join_game.png" alt="join game" /><br />Join Game!</button>
@@ -59,12 +100,9 @@
 			onchange="join_display_players(this)" class="right">
 			<!--Liste aller Spiele-->
 		</select> </label>
-		<label for="join_player">Your name: <input type="required"
-			id="join_player" name="join_player"
-			onkeyup="doenabled(this.value, 'join_join')" class="right" /> </label>
 		<label><input id="join_join" type="button" value="Join Game!"
 			name="submit" onclick="join_game();switch_play_game();return false"
-			disabled="disabled" class="right" /> </label>
+			class="right" /> </label>
 	</section>
 	<section class="right">
 		<h2>Teammates:</h2>
@@ -76,11 +114,7 @@
 		<h2>Init Game</h2>
 		<label for="init_new_game">Game Name: <input
 			type="required" name="init_new_game" id="init_new_game"
-			onkeyup="doenabled(this.value, 'init_player')" class="right" /></label><br />
-		<label for="init_player">Player Name: <input
-			type="required" name="init_player" id="init_player"
-			onkeyup="doenabled(this.value, 'init_register')" class="right"
-			disabled="disabled" /></label><br />
+			onkeyup="doenabled(this.value, 'init_register')" class="right" /></label><br />
 		<label class="center"><input type="button" name="submit"
 			value="Init Game!" id="init_register"
 			onclick="create_game();return false" disabled="disabled" class="right" /></label>
