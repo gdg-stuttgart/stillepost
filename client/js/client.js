@@ -5,7 +5,8 @@ var app = {
 	  players: [] // the id's of players participating in the game, details are in app.players
 	},
 	players: new Object(), // all players currently online by sessionId
-	games_list: [],
+	games_list: [], // names of open/running games
+	games: new Object(), // store participants of games for displaying in init_list
 	me: function() {
 	  return this.players[this.sessionId];
     },
@@ -62,6 +63,8 @@ function message(obj){
 		refresh_players();
 	} if (isMessage(obj, "UPDATE", "games_list")) {
 		refresh_games_list();
+	} if (isMessage(obj, "UPDATE", "games")) {
+		refresh_players();
 	} if (isMessage(obj, "UPDATE", "game")) {
 		refresh_game();
 	} if (isMessage(obj, "UPDATE", "state")) {
@@ -75,29 +78,41 @@ function message(obj){
 	}  
 }
 
-function refresh_players() {
-	// TODO: reactive init_list
-	$('#init_list_players').html('');
-	var i;
-	for (player_id in app.players){
-		console.log('add new player: ' + player_id);
-		//$('#init_list_players').append($('<li></li>').text(player_id));
-	}
-	
-	$('#game_list_players').html('');
-	for (i = 0;i<app.game.players.length;i++){
-		var playerid = app.game.players[i];
-		var player = app.players[playerid];
-		console.log('add new player in game: ' + playerid);
-		$('#init_list_players').append($('<li></li>').text(player.name));
-		var li = $('<li id='+player.sessionId+'></li>');
-		
-		append_player_picture(li, player);
-		li.append("<span>"+player.name+"</span>");
-		$('#game_list_players').append(li);
-	}
+function selected_game() {
+	var result;
+	$('#join_list_games  option:selected').each(function () {
+		result = $(this).text();
+    });
+	return result;
 }
 
+function refresh_players() {
+	$('#init_list_players').html('');
+	$('#game_list_players').html('');
+	var is_join_mode = document.getElementById('join').className != "hide";
+	console.log("refreshing players, join mode=" + is_join_mode);
+	var players;
+	if (is_join_mode) {
+		players = app.games[selected_game()];
+	} else {
+		players = app.game.players;
+	}
+	  for (i = 0;i<players.length;i++){
+		var playerid = players[i];
+		var player = app.players[playerid];
+		console.log('add new player in game: ' + playerid);
+		//if (!is_join_mode) {
+		$('#init_list_players').append(create_player_list_entry(player));
+		//}
+		$('#game_list_players').append(create_player_list_entry(player));
+	  }
+}
+function create_player_list_entry(player) {
+	var li = $('<li id='+player.sessionId+'></li>');
+	append_player_picture(li, player);
+	li.append("<span>"+player.name+"</span>");
+	return li;
+}
 var onImgLoad = function(ctx, img_buffer) { return function() {ctx.drawImage(img_buffer,0,0,50,50);}; };
 
 function append_player_picture(parent, player) {
@@ -195,12 +210,20 @@ function switch_join_game(){
 	document.getElementById('options_game').className='hide';
 	document.getElementById('join').className='';
 	document.getElementById('join_list_games').focus();
+	join_display_players();
 }
 
 function switch_play_game() {
 	document.getElementById('join').className='hide';
 	document.getElementById('init').className='hide';
 	document.getElementById('game').className='';	
+}
+
+function switch_options_game() {
+	document.getElementById('options_game').className='';
+	document.getElementById('init').className='hide';
+	document.getElementById('join').className='hide';
+	document.getElementById('game').className='hide';	
 }
 
 /**
@@ -210,6 +233,7 @@ function switch_play_game() {
 function join_display_players(selectElement){
 	// TODO: broken throuhg model refactoring, clients do not have all
 	// the information anymore.
+	send_neu("get_game_participants", { "name": selected_game()});
 }
 
 function update_profile() {
@@ -256,11 +280,7 @@ function show_canvas() {
  * current player passes the game on to the next player and sees what the next users draw
  */
 function pass_on(){
-	// send via websocket
 	send_neu('pass_on');
-	// disable pass on button for player
-	//$('#pass_on_button')[0].disabled=true;
-	// clear own canvas
 	clear_canvas();
 };
 

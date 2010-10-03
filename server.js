@@ -161,6 +161,19 @@ var game_prototyp = {
     	if (this.current === undefined) {
     		this.state= "FINISHED";
     	}
+    },
+    remove_player: function(player) {
+    	if (player.session_id == this.current) {
+    		this.pass_on();
+    	}
+    	var idx = this.players.indexOf(player.sessionId);
+    	if (idx != -1) {
+    		this.players.splice(idx,1);
+    		this.send("UPDATE", [ "game", "players" ], this.players);
+    		if (this.players.length == 0) {
+    			app.delete_game(this);
+    		}
+    	}
     }
 };
 
@@ -223,6 +236,12 @@ var app = {
     		console.log("Cleaning up player's "+player.sessionId+" games: " + current_game.name);
     		this.delete_game(current_game);
     		current_game = this.current_game(player.sessionId);
+    	}
+    },
+    
+    remove_player: function(player) {
+    	for (var game_name in this.games) {
+    		this.games[game_name].remove_player(player);
     	}
     }
 };
@@ -324,13 +343,13 @@ io.on('connection', function(client) {
 			pass_on(arguments);
 		} else if (msg.type == "update_profile") {
 			update_profile(arguments);
+		} else if (msg.type == "get_game_participants") {
+			get_game_participants(arguments);
 		}
 	});
 
 	client.on('disconnect', function() {
-
-//				console.log("Owner left, purging game " + gameName);
-	//			delete games[gameName];
+		app.remove_player(client.player);
 	});
 	
 	function create_game(data) {
@@ -417,6 +436,21 @@ io.on('connection', function(client) {
 		}
 		console.log("Broadcasting draw line event of " + player.to_s() + ": " + JSON.stringify(data));
 		game.send("ADD", ["game", "draw_history", player.sessionId], data);
+	}
+	
+	function get_game_participants(data) {
+		// a client has requested the list of participants of a a game in order to show it in the 
+		// init_players list
+		var player = client.player;
+		if (data.name === undefined) {
+			return;
+		}
+		var game = app.games[data.name];
+		if (game === undefined) {
+			console.log("get_game_participants: "+ data.name + " not found");
+			return;
+		}
+		player.send("UPDATE", [ "games" , game.name], game.players);
 	}
 });
 
