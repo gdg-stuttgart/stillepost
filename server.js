@@ -201,7 +201,8 @@ var app = {
 	
     delete_game: function(game) {
 		delete this.games[game.name];
-		delete this.game_labels[this.game_labels.indexOf(game.name)];
+		var idx = this.game_labels.indexOf(game.name);
+		this.game_labels.splice(idx,1);
 		this.send("UPDATE", ["games_list"], this.game_labels);
 	},
 	
