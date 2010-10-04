@@ -28,7 +28,7 @@ var canvasOnMouseMove = function(e) {
 	current = convertToCanvasCoordinates(e.pageX, e.pageY);
 	line = [lastMousePosition, current];
 	lastMousePosition = current;
-	drawLine(line);
+	draw_line(line);
 	send_neu("draw", line);
 };
 
@@ -42,7 +42,7 @@ if ('attachEvent' in window) {
 	window.addEventListener('load', canvasRegistrationFn, false);
 }
 
-function drawLine(line, canvas) {
+function draw_line(line, canvas) {
 	if (canvas == null) {
 		canvas = document.getElementById('canvas'); 
 	}
@@ -87,7 +87,7 @@ function showAll() {
 function drawCanvas(canvas, player) {
 	var lines = getHistory(player);
 	for (i = 0; i < lines.length; i++) {
-		drawLine(lines[i], canvas);
+		draw_line(lines[i], canvas);
 	}	
 }
 
@@ -99,7 +99,7 @@ function createCanvas(player) {
 	playerCanvas.setAttribute('id', 'canvas' + player);
 	section.appendChild(playerCanvas);
 	var ctx = playerCanvas.getContext("2d");
-	ctx.fillText(player, 10, 10);
+	ctx.fillText(app.players[player].name, 10, 10);
 	return playerCanvas;
 }
 

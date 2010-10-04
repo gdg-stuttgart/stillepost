@@ -18,6 +18,10 @@ var app = {
     },
     previous_user: function() {
     	return this.game.players[this.game.players.indexOf(this.game.current) -1];
+    },
+    is_current_after_me: function() {
+    	var player_ids = this.game.players;
+    	return player_ids.indexOf(this.sessionId) < player_ids.indexOf(this.game.current);
     }
 };
 
@@ -75,6 +79,11 @@ function message(obj){
 		}
 	} if (isMessage(obj, "UPDATE", "current")) {
 		user_changed();
+	}  if (isMessage(obj, "ADD", "draw_history")) {
+		if (app.is_current_after_me()) {
+			var current_history = app.game.draw_history[app.game.current];
+			draw_line(current_history[current_history.length - 1]);
+		}
 	}  
 }
 

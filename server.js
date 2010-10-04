@@ -349,6 +349,7 @@ io.on('connection', function(client) {
 	});
 
 	client.on('disconnect', function() {
+		console.log("Player " + client.player.to_s() + " disconnected");
 		app.remove_player(client.player);
 	});
 	
@@ -386,7 +387,7 @@ io.on('connection', function(client) {
 			return;
 		}
 		var game = app.games[data.name];
-		if (game === undefined) {
+		if (game == undefined) {
 			console.log("Trying to join invalid game");
 			return;			
 		}
@@ -401,7 +402,7 @@ io.on('connection', function(client) {
 	function start_game(data) {
 		var player = client.player;
 		var game = app.current_game(player.sessionId);
-		if (game === null) {
+		if (game == null) {
 			console.log("Player "+ player.to_s() + " does not own a game to start");
 			return;
 		}
@@ -414,7 +415,7 @@ io.on('connection', function(client) {
 	function pass_on(data) {
 		var player = client.player;
 		var game = app.current_game(player.sessionId);
-		if (game === undefined) {
+		if (game == null) {
 			console.log("Player "+ player.to_s() + " does not own a game to start");
 			return;
 		}
