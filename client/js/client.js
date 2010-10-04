@@ -71,6 +71,7 @@ function message(obj){
 		refresh_players();
 	} if (isMessage(obj, "UPDATE", "game")) {
 		refresh_game();
+		refresh_players();
 	} if (isMessage(obj, "UPDATE", "state")) {
 		if (app.game.state == "FINISHED") {
 			showAll();
