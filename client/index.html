@@ -119,13 +119,6 @@
 			value="Init Game!" id="init_register"
 			onclick="create_game();return false" disabled="disabled" class="right" /></label>
 	</section>
-    <section class="right">
-        <h2>Player List</h2>
-        <ul id="init_list_players">
-        	<li>you</li>
-        </ul>
-        <input type="button" name="submit" value="Start Game!" onclick="start_game(); return false" />
-    </section>
 </article>
 <article class="hide" id="game">
 	<section class="left-big" id="sectionCanvas">
@@ -133,6 +126,7 @@
 		<p>Game: <span id="lblGame"></span>, Player: <span id="lblPlayer"></span></p>
 		<canvas class="hide" id="canvas" onclick="this.style.cursor='crosshair';" ></canvas>
 		<span id="game_canvas_replacement">Game not yet started.</span>
+		<input id="start_game_button" type="button" name="submit" value="Start Game!" onclick="start_game(); return false" class="hide" />
 	</section>
 	<section class="right-small">
 		<h2>Teammates:</h2>

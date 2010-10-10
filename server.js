@@ -432,7 +432,7 @@ io.on('connection', function(client) {
 	function draw_line(data) {
 		var player = client.player;
 		var game = app.current_game(player.sessionId);
-		if (game === undefined) {
+		if (game == undefined) {
 			console.log("Error: can not broadcasting draw line event of player "+ player.to_s());
 			return;
 		}

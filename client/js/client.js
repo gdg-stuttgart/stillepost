@@ -64,14 +64,14 @@ function message(obj){
 	console.log(obj);
 	update_model(obj);
     if (isMessage(obj, "UPDATE", "players")) {
-		refresh_players();
+		//refresh_join_players();
 	} if (isMessage(obj, "UPDATE", "games_list")) {
 		refresh_games_list();
 	} if (isMessage(obj, "UPDATE", "games")) {
-		refresh_players();
+		refresh_join_players();
 	} if (isMessage(obj, "UPDATE", "game")) {
 		refresh_game();
-		refresh_players();
+		refresh_game_players();
 	} if (isMessage(obj, "UPDATE", "state")) {
 		if (app.game.state == "FINISHED") {
 			showAll();
@@ -96,29 +96,43 @@ function selected_game() {
 	return result;
 }
 
-function refresh_players() {
-	$('#init_list_players').html('');
-	$('#game_list_players').html('');
-	var is_join_mode = document.getElementById('join').className != "hide";
-	console.log("refreshing players, join mode=" + is_join_mode);
-	var players;
-	if (is_join_mode) {
-		players = app.games[selected_game()];
-	} else {
-		players = app.game.players;
+function refresh_join_players() {
+	console.log("refreshing players of join list");
+	var list = $('#join_list_players');
+	list.html('');
+	var players = app.games[selected_game()];
+	if (players === undefined) {
+		return;
 	}
-	  for (i = 0;i<players.length;i++){
+	var i;
+	for (i = 0;i<players.length;i++){
 		var playerid = players[i];
 		var player = app.players[playerid];
-		console.log('add new player in game: ' + playerid);
-		//if (!is_join_mode) {
-		$('#init_list_players').append(create_player_list_entry(player));
-		//}
-		$('#game_list_players').append(create_player_list_entry(player));
-	  }
+		list.append(create_player_list_entry(player, false /* create id*/));
+	}
 }
-function create_player_list_entry(player) {
-	var li = $('<li id='+player.sessionId+'></li>');
+
+function refresh_game_players() {
+	console.log("refreshing players of game list");
+	var list = $('#game_list_players');
+	list.html('');
+	var players = app.game.players;
+	var i;
+	for (i = 0;i<players.length;i++){
+		var playerid = players[i];
+		var player = app.players[playerid];
+		list.append(create_player_list_entry(player, true /* create id*/));
+	}
+}
+
+function create_player_list_entry(player, createId) {
+	var li;
+	if (createId) {
+		li = $('<li id='+player.sessionId+'></li>');
+	}
+	else {
+		li = $('<li></li>');
+	}
 	append_player_picture(li, player);
 	li.append("<span>"+player.name+"</span>");
 	return li;
@@ -241,8 +255,6 @@ function switch_options_game() {
  * @param selectElement
  */
 function join_display_players(selectElement){
-	// TODO: broken throuhg model refactoring, clients do not have all
-	// the information anymore.
 	send_neu("get_game_participants", { "name": selected_game()});
 }
 
@@ -261,6 +273,9 @@ function create_game(){
 	document.getElementById('init_register').disabled=true;
 	$('#game_list_players').html('');
 	$('#init_list_players').html('');
+	$('#start_game_button').removeClass('hide');
+	switch_play_game();
+
 }
 
 /**
@@ -278,7 +293,7 @@ function join_game(){
  */
 function start_game(){
 	send_neu('start_game');
-	switch_play_game();
+	$('#start_game_button').addClass('hide');
 };
 
 function show_canvas() {
