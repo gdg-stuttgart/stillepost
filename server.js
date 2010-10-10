@@ -186,8 +186,21 @@ var app = {
 		var new_player = Object.create(player_prototyp);
 		new_player.sessionId = sessionId;
 		this.players[sessionId] = new_player;
+		this.notify_players_updated();
 		return new_player;
 	},
+	
+	remove_player: function(player) {
+    	for (var game_name in this.games) {
+    		this.games[game_name].remove_player(player);
+    	}
+    	delete this.players[player.sessionId];
+    	this.notify_players_updated();
+    },
+    
+    notify_players_updated: function() {
+    	app.send("UPDATE", ["players"], app.client_players());
+    },
 
     create_game: function(sessionId, name) {
 		var new_game = Object.create(game_prototyp);
@@ -238,13 +251,8 @@ var app = {
     		this.delete_game(current_game);
     		current_game = this.current_game(player.sessionId);
     	}
-    },
-    
-    remove_player: function(player) {
-    	for (var game_name in this.games) {
-    		this.games[game_name].remove_player(player);
-    	}
-    }
+    }   
+ 
 };
 
 var to_array = function(o) {
@@ -324,7 +332,6 @@ var	io = io.listen(server);
 		
 io.on('connection', function(client) {
 	client.player = app.create_player(client.sessionId);
-	app.send("UPDATE", ["players"], app.client_players());
 	client.player.send("UPDATE", ["sessionId"], client.sessionId);
 	client.player.send("UPDATE", ["games_list"], app.game_labels);
 

@@ -85,6 +85,11 @@ article#game section.left-big {
 	width: 610px;
 }
 
+div#online_players {
+	position: static;
+	clear: right;
+}
+
 hr {
 	background-image: url('../img/hr.png');
 	width: 674px;

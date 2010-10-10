@@ -64,7 +64,7 @@ function message(obj){
 	console.log(obj);
 	update_model(obj);
     if (isMessage(obj, "UPDATE", "players")) {
-		//refresh_join_players();
+		refresh_online_players();
 	} if (isMessage(obj, "UPDATE", "games_list")) {
 		refresh_games_list();
 	} if (isMessage(obj, "UPDATE", "games")) {
@@ -96,32 +96,39 @@ function selected_game() {
 	return result;
 }
 
+function refresh_online_players() {
+	console.log("refreshing list of online players");
+	var list = $('#online_list_players');
+	var playerids = [];
+	for(var playerid in app.players) {
+		playerids.push(playerid); 
+	};
+	refresh_players(list, playerids, false /*setid*/);
+}
+
 function refresh_join_players() {
 	console.log("refreshing players of join list");
 	var list = $('#join_list_players');
-	list.html('');
-	var players = app.games[selected_game()];
-	if (players === undefined) {
-		return;
-	}
-	var i;
-	for (i = 0;i<players.length;i++){
-		var playerid = players[i];
-		var player = app.players[playerid];
-		list.append(create_player_list_entry(player, false /* create id*/));
-	}
+	refresh_players(list, app.games[selected_game()], false /*setid*/);
 }
 
 function refresh_game_players() {
 	console.log("refreshing players of game list");
 	var list = $('#game_list_players');
+	refresh_players(list, app.game.players, true /*setid*/);
+}
+
+function refresh_players(list, playerids, setid) {
+	if (playerids == undefined) {
+		console.log("not refresing player list because player ids are undefined");
+		return;
+	}
 	list.html('');
-	var players = app.game.players;
 	var i;
-	for (i = 0;i<players.length;i++){
-		var playerid = players[i];
+	for (i = 0;i<playerids.length;i++){
+		var playerid = playerids[i];
 		var player = app.players[playerid];
-		list.append(create_player_list_entry(player, true /* create id*/));
+		list.append(create_player_list_entry(player, setid));
 	}
 }
 
