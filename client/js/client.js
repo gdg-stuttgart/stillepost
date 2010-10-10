@@ -25,6 +25,15 @@ var app = {
     }
 };
 
+// firefox without firebugs does not have console defined
+if (typeof(console) === 'undefined' || console == null) {
+	console = {
+		error:function(){},
+		warn:function(){},
+		log:function(){}
+	};
+}
+
 // setup socket
 io.setPath('/js/');
 
