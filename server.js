@@ -353,6 +353,8 @@ io.on('connection', function(client) {
 			update_profile(arguments);
 		} else if (msg.type == "get_game_participants") {
 			get_game_participants(arguments);
+		} else if (msg.type == "invite") {
+			invite(arguments);
 		}
 	});
 
@@ -461,6 +463,28 @@ io.on('connection', function(client) {
 		}
 		player.send("UPDATE", [ "games" , game.name], game.players);
 	}
+	
+	function invite(data) {
+		// guard 
+		if (data === undefined || data.invited_id === undefined || data.game == undefined) {
+			console.log("Need to know which player to invite");
+			return;
+		}
+		var invited = app.players[data.invited_id];
+		if (invited == undefined) {
+			console.log("Can not invite unknown player " + data.invited_id);
+			return;
+		}
+		var game = app.games[data.game];
+		if (game === undefined) {
+			console.log("Can not invite to unknown game");
+			return;
+		}
+		var player = client.player;
+		console.log("Player " + player.to_s() + " invites " + invited.to_s() + " to " + game.to_s());
+		invited.send("UPDATE", ["invited"], { "game" : data.game, "inviter" : player.sessionId});
+	}
+
 });
 
 

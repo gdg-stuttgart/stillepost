@@ -40,6 +40,9 @@ function update_model(message) {
 	var property_chain = message.property;
 	console.log('updating model:' + property_chain.join("."));
 	for (i = 0 ; i < property_chain.length - 1; i++) {
+		if (targetObject[property_chain[i]] === undefined) {
+			targetObject[property_chain[i]] = new Object();
+		}
 		targetObject = targetObject[property_chain[i]];
 	};
 	var targetProperty = property_chain[property_chain.length -1];
@@ -80,6 +83,11 @@ function message(obj){
 		}
 	} if (isMessage(obj, "UPDATE", "current")) {
 		user_changed();
+	} if (isMessage(obj, "UPDATE", "invited")) {
+		var game_name = app.invited.game;
+		alert("You have been invited to game " + game_name);
+		send_neu("join_game", {"name": game_name});
+		switch_play_game();
 	}  if (isMessage(obj, "ADD", "draw_history")) {
 		if (app.is_current_after_me()) {
 			var current_history = app.game.draw_history[app.game.current];
@@ -132,14 +140,29 @@ function refresh_players(list, playerids, setid) {
 	}
 }
 
+var player_drag_start = function(sessionId) {
+	return function(event) { 
+		var data = event.originalEvent.dataTransfer; 
+		console.log("Dragging " + sessionId );
+		data.setData("Text", sessionId);
+		return true;
+	};
+};
+var player_drag_end = function(event) {
+    if (event.preventDefault) event.preventDefault();
+    return false;
+  };
+  
 function create_player_list_entry(player, createId) {
 	var li;
 	if (createId) {
 		li = $('<li id='+player.sessionId+'></li>');
 	}
 	else {
-		li = $('<li></li>');
+		li = $('<li draggable="true"></li>');
 	}
+	li.bind('dragstart', player_drag_start(player.sessionId));
+	li.bind('dragend', player_drag_end);
 	append_player_picture(li, player);
 	li.append("<span>"+player.name+"</span>");
 	return li;
@@ -245,6 +268,7 @@ function switch_join_game(){
 }
 
 function switch_play_game() {
+	document.getElementById('options_game').className='hide';
 	document.getElementById('join').className='hide';
 	document.getElementById('init').className='hide';
 	document.getElementById('game').className='';	
@@ -293,6 +317,7 @@ function join_game(){
 	send_neu("join_game", {"name":name});
 	// clear player list, will be updated from a server message later
 	$('#game_list_players').html('');
+	switch_play_game();
 };
 
 /**
@@ -334,3 +359,38 @@ function doenabled(text, idid) {
 		document.getElementById(idid).disabled = true;
   }
 
+$(function() {
+      	  
+	  var target = $('#game_list_players');
+
+	  target.bind('drop', function(event) {
+	    var data = event.originalEvent.dataTransfer;
+	    var player_id = ( data.getData('Text') );
+	    var player = app.players[player_id];
+	    if (player == undefined) {
+	    	alert("Did not recognized the player.");
+	    	return;
+	    }
+	    send_neu("invite", { "invited_id" : player_id, "game" : app.game.name} );
+	    alert(player.name + " has been invited.");
+	    return(false);
+	  });
+	 
+	  target.bind('dragover', function(event) {    
+	    if (event.preventDefault) event.preventDefault();
+	    return false;
+	  });
+
+	   target.bind('dragenter', function(event) {
+	     $(this).addClass('hover');
+	     if (event.preventDefault) event.preventDefault();
+	     return false;
+	   });
+
+	   target.bind('dragleave', function(event) {
+	     $(this).removeClass('hover');
+	     if (event.preventDefault) event.preventDefault();
+	     return false;  
+	  });
+
+});
