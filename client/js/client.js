@@ -394,9 +394,12 @@ $(function() {
 	     return false;  
 	  });
 
-	  var txt_join_player = $('#join_player');
-	  txt_join_player.val(localStorage.getItem("name"));
-	  
+	  var name = localStorage.getItem("name");
+	  if (name != null) {
+		 var txt_join_player = $('#join_player');
+         txt_join_player.val(name);
+         update_profile();
+	  };
 	  var url = localStorage.getItem("url");
 	  if (url != null) {
 	    send_neu("update_profile", { "property" : "url", "value": url});
