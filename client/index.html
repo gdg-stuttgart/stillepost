@@ -54,6 +54,7 @@ Now online
 		        var imgPassed = event.dataTransfer.getData('text/uri-list');
 		        append_player_picture($('#picture_drop'), { url: imgPassed});
 		        send_neu("update_profile", { "property" : "url", "value": imgPassed});
+		        localStorage.setItem("url", imgPassed);
 		      }
 		    }
 		    return false;

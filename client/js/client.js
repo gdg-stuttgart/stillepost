@@ -292,6 +292,7 @@ function join_display_players(selectElement){
 function update_profile() {
 	var name = document.getElementById('join_player').value;
 	send_neu("update_profile", { "property" : "name", "value": name});
+	localStorage.setItem("name", name);
 }
 
 /**
@@ -392,5 +393,13 @@ $(function() {
 	     if (event.preventDefault) event.preventDefault();
 	     return false;  
 	  });
+
+	  var txt_join_player = $('#join_player');
+	  txt_join_player.val(localStorage.getItem("name"));
+	  
+	  var url = localStorage.getItem("url");
+	  if (url != null) {
+	    send_neu("update_profile", { "property" : "url", "value": url});
+	  }
 
 });
