@@ -186,7 +186,6 @@ var app = {
 		var new_player = Object.create(player_prototyp);
 		new_player.sessionId = sessionId;
 		this.players[sessionId] = new_player;
-		this.notify_players_updated();
 		return new_player;
 	},
 	
@@ -332,7 +331,9 @@ var	io = io.listen(server);
 		
 io.on('connection', function(client) {
 	client.player = app.create_player(client.sessionId);
+	// letting the client know who he is should be the very first thing
 	client.player.send("UPDATE", ["sessionId"], client.sessionId);
+	app.notify_players_updated();
 	client.player.send("UPDATE", ["games_list"], app.game_labels);
 
 	client.on('message', function(message) {

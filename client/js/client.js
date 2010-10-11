@@ -22,6 +22,26 @@ var app = {
     is_current_after_me: function() {
     	var player_ids = this.game.players;
     	return player_ids.indexOf(this.sessionId) < player_ids.indexOf(this.game.current);
+    },
+    initialize_profile: function() {
+	  var name = localStorage.getItem("name");
+	  if (name != null) {
+		  send_neu("update_profile", { "property" : "name", "value": name});
+	  } else {
+		  name = this.me().name;
+	  }
+	  $('#join_player').val(name);
+      
+	  var url = localStorage.getItem("url");
+	  if (url != null) {
+	    send_neu("update_profile", { "property" : "url", "value": url});
+	  } else {
+		  url = this.me().url;
+	  }
+	  $('#img_profile_url').attr("src", url);
+	  
+	  // I do not want be called again
+	  this.initialize_profile = function() {};
     }
 };
 
@@ -76,6 +96,7 @@ function message(obj){
 	console.log(obj);
 	update_model(obj);
     if (isMessage(obj, "UPDATE", "players")) {
+    	app.initialize_profile();
 		refresh_online_players();
 	} if (isMessage(obj, "UPDATE", "games_list")) {
 		refresh_games_list();
@@ -436,15 +457,5 @@ $(function() {
 		  }, false);
 				
 
-	  var name = localStorage.getItem("name");
-	  if (name != null) {
-		 var txt_join_player = $('#join_player');
-         txt_join_player.val(name);
-         update_profile();
-	  };
-	  var url = localStorage.getItem("url");
-	  if (url != null) {
-	    send_neu("update_profile", { "property" : "url", "value": url});
-	  }
 
 });
