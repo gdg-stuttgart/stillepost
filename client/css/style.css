@@ -186,3 +186,21 @@ canvas {
 	height: 50px;
 	width: 50px;
 }
+
+fieldset{ width: 166px; border: none; background-color: #ddd; text-align: left; float:right;
+}
+fieldset legend{ background-color: #ddd; padding: 0 64px 0 2px;
+}
+fieldset>ol{list-style: none; padding:0; margin: 2px;
+} fieldset>ol>li{
+margin: 0 0 9px 0; padding: 0;
+}
+/* Make inputs go to their own line */
+fieldset input{ display:block;
+}
+input{ width: 140px; background-color: #fff; border: 1px solid #bbb;
+}
+/* input[type="submit"]{ width: 202px; padding: 0;background-color: #bbb;}*/
+
+input, fieldset, legend{ border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}

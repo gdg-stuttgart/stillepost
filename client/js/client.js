@@ -402,6 +402,39 @@ $(function() {
 	     if (event.preventDefault) event.preventDefault();
 	     return false;  
 	  });
+	   
+		var dropZone = $('#picture_drop');
+		dropZone.bind('dragenter', function(event) {
+		    if (event.preventDefault) event.preventDefault();
+		    $(this).addClass('hovering');
+		    return false;
+		  }, false);
+		dropZone.bind('dragover', function(event) {
+		    if (event.preventDefault) event.preventDefault(); // allows us to drop
+		    return false;
+		  }, false);
+		dropZone.bind('dragleave', function(event) {
+		    if (event.preventDefault) event.preventDefault(); // allows us to drop
+		    $(this).removeClass('hovering');
+		    return false;
+		  }, false);
+		dropZone.bind('drop', function(event) {
+		    if (event.preventDefault) event.preventDefault();
+		    var dataTransfer = event.originalEvent.dataTransfer;
+		    var types = dataTransfer.types;
+		    
+		    for (var i = 0; i < types.length; i++) {
+		      if (types[i] == 'text/uri-list') {
+		    	  this.innerHTML = '';  
+		        var imgPassed = dataTransfer.getData('text/uri-list');
+		        append_player_picture($('#picture_drop'), { url: imgPassed});
+		        send_neu("update_profile", { "property" : "url", "value": imgPassed});
+		        localStorage.setItem("url", imgPassed);
+		      }
+		    }
+		    return false;
+		  }, false);
+				
 
 	  var name = localStorage.getItem("name");
 	  if (name != null) {

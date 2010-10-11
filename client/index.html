@@ -22,48 +22,24 @@ Now online
 </div>
 <article id="options_game">
 	<section id="player_profile">
-		<label for="join_player">Your name: <input type="required"
-			id="join_player" name="join_player"
-			onchange="update_profile()" /> </label>
-		<label for="picture_drop">Your picture: <div id="picture_drop">Drop here</div></label>	
-		<script>
-		var dropZone = document.getElementById('picture_drop');
-		dropZone.addEventListener('dragenter', function(event) {
-		    if (event.preventDefault) event.preventDefault();
-		    event.dataTransfer.dropEffect = 'copy';
-		    this.className = 'hovering';
-		    return false;
-		  }, false);
-		dropZone.addEventListener('dragover', function(event) {
-		    if (event.preventDefault) event.preventDefault(); // allows us to drop
-		    event.dataTransfer.dropEffect = 'copy';
-		    return false;
-		  }, false);
-		dropZone.addEventListener('dragleave', function(event) {
-		    if (event.preventDefault) event.preventDefault(); // allows us to drop
-		    this.className = '';
-		    return false;
-		  }, false);
-		dropZone.addEventListener('drop', function(event) {
-		    if (event.preventDefault) event.preventDefault();
-		    var types = event.dataTransfer.types;
-		    
-		    for (var i = 0; i < types.length; i++) {
-		      if (types[i] == 'text/uri-list') {
-		    	  this.innerHTML = '';  
-		        var imgPassed = event.dataTransfer.getData('text/uri-list');
-		        append_player_picture($('#picture_drop'), { url: imgPassed});
-		        send_neu("update_profile", { "property" : "url", "value": imgPassed});
-		        localStorage.setItem("url", imgPassed);
-		      }
-		    }
-		    return false;
-		  }, false);
-				
-		</script>
+	
 	</section>
 
     <section class="center">
+    <fieldset id="profile">
+		<legend>About you</legend> 
+		<ol>
+			<li>
+				<label for="join_player">Name:</label> 
+				<input type="required" id="join_player" name="join_player" onchange="update_profile()" />
+		   </li>
+		   <li>
+			<label for="picture_drop">Picture:</label> 
+			<div id="picture_drop">Drop here</div>	
+		   </li>		
+		</ol>
+		
+	</fieldset>
   		<button name="option" value="init game" onclick="switch_init_game(); return false" class="margin_right"><img src="img/new_game.png" alt="init game" /><br />Init Game!</button>
 		<button name="option" value="join game" onclick="switch_join_game(); return false" class="margin_left"><img src="img/join_game.png" alt="join game" /><br />Join Game!</button>
 	</section>
