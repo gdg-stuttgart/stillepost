@@ -23,12 +23,16 @@ h1 {
 	float: left;
 	clear: left;
 	margin-top: 103px;
-	margin-left: 155px;
+	margin-left: 14px;
 	margin-bottom: 0;
 }
 
 section > h2:FIRST-CHILD {
 	margin-top: 0.5em;
+}
+
+header {
+	width: 674px;
 }
 
 header span.sub {
@@ -60,21 +64,35 @@ body {
 	margin-bottom: 2em;
 }
 
+/* the reason for the all div is to center everything */
+#all {
+	margin-left: auto;
+	margin-right: auto;	
+	/* the difference between sidebar width and main width
+	   is the margin between them 180px+730px=910px*/
+	width: 920px;
+}
+
+div#sidebar{
+	width: 180px;
+	padding-top: 160px;
+}
+
+div#main {
+	float: right;
+	width: 730px;
+}
+
 header {
 	background-image: url('../img/edges.png');
 	background-position: top left;
 	background-repeat: no-repeat;
 	height: 250px;
-	margin-left: auto;
-	margin-right: auto;
-	width: 950px;
 }
 
 article {
 	clear: left;
 	width: 674px;
-	margin-left: auto;
-	margin-right: auto;
 }
 
 article#game {
@@ -86,11 +104,8 @@ article#game section.left-big {
 }
 
 div#online_players {
-	position: fixed;
-	top: 0px;
-	right: 0px;
-	width: 150px;
-	
+	width: 180px;
+	margin-top:30px;
 }
 
 hr {
@@ -156,8 +171,6 @@ section.left-big {
 footer {
 	clear: both;
 	width: 674px;
-	margin-left: auto;
-	margin-right: auto;
 }
 
 label {
@@ -190,18 +203,32 @@ canvas {
 	width: 50px;
 }
 
-fieldset{ width: 166px; border: none; background-color: #ddd; text-align: left; float:right;
+
+fieldset{ 
+	border: none;
+	background-color: #ddd;
+	text-align: left;
 }
-fieldset legend{ background-color: #ddd; padding: 0 64px 0 2px;
+
+fieldset legend { 
+	background-color: #ddd; 
+	padding: 0 64px 0 2px;
 }
-fieldset>ol{list-style: none; padding:0; margin: 2px;
-} fieldset>ol>li{
-margin: 0 0 9px 0; padding: 0;
+
+fieldset>ol {
+	list-style: none; 
+	padding:0; 
+	margin: 2px;
+}
+
+fieldset>ol>li{
+	margin: 0 0 9px 0; 
+	padding: 0;
 }
 /* Make inputs go to their own line */
 fieldset input{ display:block;
 }
-input{ width: 140px; background-color: #fff; border: 1px solid #bbb;
+input{ width: 120px; background-color: #fff; border: 1px solid #bbb;
 }
 /* input[type="submit"]{ width: 202px; padding: 0;background-color: #bbb;}*/
 
@@ -210,6 +237,6 @@ input, fieldset, legend{ border-radius: 5px; -moz-border-radius: 5px; -webkit-bo
 
 #picture_drop>img {  width: 40px; height: 40px; border: 3px solid #bbb}
 
-.player_list {list-style: none; padding:0; margin: 2px; }
+.player_list { list-style: none; padding:0; margin: 2px; }
 .player_list>li { margin: 0 0 9px 0; padding: 0; }
 .player_list>li>img {  width: 30px; height: 30px; border: 2px solid #bbb; vertical-align: middle; margin-right: 3px;  }

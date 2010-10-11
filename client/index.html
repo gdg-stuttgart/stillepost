@@ -10,33 +10,18 @@
     <title>stillepost</title>
 </head>
 <body>
+<div id="all">
+<div id="main">
 <header>
 	<h1>Stillepost</h1>
 	<span class="sub"><span class="sub1">zum</span><br /><span class="sub2">malen</span></span>
 	<p class="center clear"><em>English: Chinese Whisperer by drawing</em></p>
 	<hr />
 </header>
-<div id="online_players">
-Now online
-<ul id="online_list_players" class="player_list"><!--list of all players being online --></ul>
-</div>
+
 <article id="options_game">
 
     <section class="center">
-    <fieldset id="profile">
-		<legend>About you</legend> 
-		<ol>
-			<li>
-				<label for="join_player">Name:</label> 
-				<input type="required" id="join_player" name="join_player" onchange="update_profile()" />
-		   </li>
-		   <li>
-			<label for="picture_drop">Picture:</label> 
-			<div id="picture_drop"><img id="img_profile_url" alt="Your picture" title="Drop an image url here"></img> </div>	
-		   </li>		
-		</ol>
-		
-	</fieldset>
   		<button name="option" value="init game" onclick="switch_init_game(); return false" class="margin_right"><img src="img/new_game.png" alt="init game" /><br />Init Game!</button>
 		<button name="option" value="join game" onclick="switch_join_game(); return false" class="margin_left"><img src="img/join_game.png" alt="join game" /><br />Join Game!</button>
 	</section>
@@ -113,10 +98,33 @@ Now online
 		<input type="submit" id="pass_on_button" value="pass on" name="submit" disabled="disabled" onclick="pass_on(); return false" />
 	</section>
 </article>
+
 <footer>
   	<hr />
   	<span class="left">GTUG Campout Project</span>
   	<span class="right"><a href="">Impressum</a> | <a href="">Kontakt</a> | <a href="">Links</a></span>
 </footer>
+</div> <!-- end main -->
+<div id="sidebar">
+    <fieldset id="profile">
+		<legend>About you</legend> 
+		<ol>
+			<li>
+				<label for="join_player">Name:</label> 
+				<input type="required" id="join_player" name="join_player" onchange="update_profile()" />
+		   </li>
+		   <li>
+			<label for="picture_drop">Picture:</label> 
+			<div id="picture_drop"><img id="img_profile_url" alt="Your picture" title="Drop an image url here"></img> </div>	
+		   </li>		
+		</ol>
+	</fieldset>
+	<div id="online_players">
+	Now online
+	<ul id="online_list_players" class="player_list"><!--list of all players being online --></ul>
+	</div>
+
+</div> <!--  end sidebar -->
+</div> <!--  end all -->
 </body>
 </html>
