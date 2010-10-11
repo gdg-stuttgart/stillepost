@@ -137,11 +137,20 @@ function selected_game() {
 function refresh_online_players() {
 	console.log("refreshing list of online players");
 	var list = $('#online_list_players');
+	list.addClass("fade");
+	setTimeout("refresh_online_players_continued()", 1000);
+}
+
+function refresh_online_players_continued() {
+	console.log("refreshing list of online players");
+	var list = $('#online_list_players');
+	list.addClass("fade");
 	var playerids = [];
 	for(var playerid in app.players) {
 		playerids.push(playerid); 
 	};
 	refresh_players(list, playerids, false /*setid*/);
+	list.removeClass("fade");
 }
 
 function refresh_join_players() {
