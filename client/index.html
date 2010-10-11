@@ -18,12 +18,9 @@
 </header>
 <div id="online_players">
 Now online
-<ul id="online_list_players"><!--list of all players being online --></ul>
+<ul id="online_list_players" class="player_list"><!--list of all players being online --></ul>
 </div>
 <article id="options_game">
-	<section id="player_profile">
-	
-	</section>
 
     <section class="center">
     <fieldset id="profile">
@@ -35,7 +32,7 @@ Now online
 		   </li>
 		   <li>
 			<label for="picture_drop">Picture:</label> 
-			<div id="picture_drop"><img id="img_profile_url" alt="Your picture" title ="Drop an image url here"></img> </div>	
+			<div id="picture_drop"><img id="img_profile_url" alt="Your picture" title="Drop an image url here"></img> </div>	
 		   </li>		
 		</ol>
 		
@@ -87,7 +84,7 @@ Now online
 	</section>
 	<section class="right">
 		<h2>Teammates:</h2>
-		<ul id="join_list_players"><!--Liste der Spieler im Spiel--></ul>
+		<ul id="join_list_players" class="player_list"><!--Liste der Spieler im Spiel--></ul>
 	</section>
 </article>
 <article class="hide" id="init">
@@ -111,8 +108,7 @@ Now online
 	</section>
 	<section class="right-small">
 		<h2>Teammates:</h2>
-		<ul id="game_list_players">
-           	<li>Players</li>
+		<ul id="game_list_players" class="player_list">
 		</ul>
 		<input type="submit" id="pass_on_button" value="pass on" name="submit" disabled="disabled" onclick="pass_on(); return false" />
 	</section>

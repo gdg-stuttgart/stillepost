@@ -73,12 +73,6 @@ function getHistory(player) {
 function showAll() {
 	$('#canvas')[0].className='hide';
 	var section = document.getElementById("sectionCanvas");
-	var home = document.createElement('button');
-	home.setAttribute("onclick", "switch_options_game();return false");
-	home.setAttribute("type", "button");
-	home.setAttribute("name", "submit");
-	home.setAttribute("value", "Home");
-	section.appendChild(home);
 	for (player in app.game.draw_history) {
 		drawCanvas(createCanvas(player), player);
 	}

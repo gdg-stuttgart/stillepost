@@ -203,18 +203,9 @@ function append_player_picture(parent, player) {
 	if (player.url == undefined) {
 		return;
 	};
-	var cEl = document.createElement('canvas');
-	cEl.width = 50;
-	cEl.height = 50;
-	cEl.id = "userpicture";
-	var ctx = cEl.getContext('2d');
-	var img_buffer = document.createElement('img');
-	img_buffer.src = player.url;
-	img_buffer.style.display = 'none';
-	document.body.appendChild(img_buffer); // this line only needed in safari
-	
-	img_buffer.onload = onImgLoad(ctx, img_buffer);
-	parent.append(cEl);
+
+	var img = $("<img></img>").attr("src", player.url);
+	parent.append(img);
 }
 
 function refresh_games_list() {
