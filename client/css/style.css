@@ -203,7 +203,6 @@ canvas {
 	width: 50px;
 }
 
-
 fieldset{ 
 	border: none;
 	background-color: #ddd;
@@ -228,11 +227,18 @@ fieldset>ol>li{
 /* Make inputs go to their own line */
 fieldset input{ display:block;
 }
-input{ width: 120px; background-color: #fff; border: 1px solid #bbb;
+input{ width: 138px; background-color: #fff; border: 1px solid #bbb;
 }
 /* input[type="submit"]{ width: 202px; padding: 0;background-color: #bbb;}*/
 
 input, fieldset, legend{ border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+}
+
+fieldset, legend { 
+	background-image: -moz-linear-gradient(top, #fff, #efefef );
+	background-image: -webkit-gradient( linear,left bottom, left top, color-stop(0, #fff), color-stop(1, #efefef));
+	background-image: linear-gradient( top, #fff, #efefef);
+	border: 1px solid #000
 }
 
 #picture_drop>img {  width: 40px; height: 40px; border: 3px solid #bbb}
