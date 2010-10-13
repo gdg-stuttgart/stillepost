@@ -71,7 +71,8 @@ function getHistory(player) {
 }
 
 function showAll() {
-	$('#canvas')[0].className='hide';
+	$('#restart_game_button').removeClass("hide");
+	$('#canvas').addClass('hide');
 	var section = document.getElementById("sectionCanvas");
 	for (player in app.game.draw_history) {
 		drawCanvas(createCanvas(player), player);
