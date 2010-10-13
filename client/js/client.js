@@ -233,8 +233,6 @@ function refresh_games_list() {
 function refresh_game() {
 	$('#lblGame').html('');
 	$('#lblGame').append(document.createTextNode(app.game.name));
-	$('#lblPlayer').html('');
-	$('#lblPlayer').append(document.createTextNode(app.me().name));
 }
 
 function user_changed() {
@@ -245,7 +243,6 @@ function user_changed() {
 	} else {
 		name = app.current().name;
 	}
-	document.getElementById("game_canvas_replacement").firstChild.nodeValue = "Currently drawing: " + name;
 	$('#pass_on_button')[0].disabled=!app.am_i_current();
 	if (app.am_i_current()) {
 		var previous = app.previous_user();
@@ -335,8 +332,11 @@ function create_game(){
 	document.getElementById('init_register').disabled=true;
 	$('#game_list_players').html('');
 	$('#init_list_players').html('');
-	$('#start_game_button').removeClass('hide');
+	
 	switch_play_game();
+	$('#pass_on_button').addClass('hide');
+	$('#player_starting_game').removeClass("hide");
+	$('#invited_player_waiting').addClass("hide");
 
 }
 
@@ -356,12 +356,16 @@ function join_game(){
  */
 function start_game(){
 	send_neu('start_game');
-	$('#start_game_button').addClass('hide');
+	show_canvas();
 };
 
 function show_canvas() {
-	$('#game_canvas_replacement')[0].className="hide";
-	$('#canvas')[0].className="";
+	$('#player_starting_game').addClass("hide");
+	$('#invited_player_waiting').addClass("hide");
+	$('#canvas').removeClass("hide");
+	$('#teammates').addClass("right-small");
+	$('#sectionCanvas').addClass("left-big");
+	$('#pass_on_button').removeClass('hide');
 }
 
 /**

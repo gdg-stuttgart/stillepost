@@ -78,7 +78,7 @@
 		<form onsubmit="create_game();return false">
 			<fieldset>
 				<label for="init_new_game">Game Name:
-					<input required="required" name="init_new_game" id="init_new_game" class="right" />
+					<input required="required" name="init_new_game" id="init_new_game" class="right" placeholder="enter a name for your game..." />
 				</label><br />
 				<label class="center">
 					<input type="submit" value="Init Game!" id="init_register" class="right"/>
@@ -88,15 +88,21 @@
 	</section>
 </article>
 <article class="hide" id="game">
-	<section class="left-big" id="sectionCanvas">
-		<h2>Canvas:</h2>
-		<p>Game: <span id="lblGame"></span>, Player: <span id="lblPlayer"></span></p>
+	<section id="sectionCanvas">
+		<p>
+		<span id="lblGame">Name of the game</span>
+		</p>
+	    <div id="player_starting_game" class="hide">
+		<p>To invite players drag them from the list of online players on the left onto the list of your team-mates below.
+		An invitation will be sent to the player and the player will be added to your team mates when it is accepted.
+		Or wait for players to add themselves. Then start the game.</p>
+		<input id="start_game_button" type="button" name="submit" value="Start Game!" onclick="start_game(); return false" />
+		</div>	    
+		<p id="invited_player_waiting">Please wait while players are gathering. Once the game is started you will see which player draws. When the player before you turns on the game to you, you will see his drawing shortly. Then it is your turn to redraw what you have seen.</p>
 		<canvas class="hide" id="canvas" onclick="this.style.cursor='crosshair';" ></canvas>
-		<span id="game_canvas_replacement">Game not yet started.</span>
-		<input id="start_game_button" type="button" name="submit" value="Start Game!" onclick="start_game(); return false" class="hide" />
 	</section>
-	<section class="right-small">
-		<h2>Teammates:</h2>
+	<section id="teammates">
+		<h2>Team-mates</h2>
 		<ul id="game_list_players" class="player_list">
 		</ul>
 		<input type="submit" id="pass_on_button" value="pass on" name="submit" disabled="disabled" onclick="pass_on(); return false" />
