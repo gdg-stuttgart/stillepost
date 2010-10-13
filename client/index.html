@@ -75,12 +75,16 @@
 <article class="hide" id="init">
 	<section class="left">
 		<h2>Init Game</h2>
-		<label for="init_new_game">Game Name: <input
-			type="required" name="init_new_game" id="init_new_game"
-			onkeyup="doenabled(this.value, 'init_register')" class="right" /></label><br />
-		<label class="center"><input type="button" name="submit"
-			value="Init Game!" id="init_register"
-			onclick="create_game();return false" disabled="disabled" class="right" /></label>
+		<form onsubmit="create_game();return false">
+			<fieldset>
+				<label for="init_new_game">Game Name:
+					<input required="required" name="init_new_game" id="init_new_game" class="right" />
+				</label><br />
+				<label class="center">
+					<input type="submit" value="Init Game!" id="init_register" class="right"/>
+				</label>
+			</fieldset>
+		</form>
 	</section>
 </article>
 <article class="hide" id="game">
